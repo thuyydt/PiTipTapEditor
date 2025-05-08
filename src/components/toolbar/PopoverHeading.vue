@@ -1,6 +1,11 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import { ChevronDownIcon } from '@heroicons/vue/24/outline'
+import HIcon from '../icons/HIcon.vue'
+import H1Icon from '../icons/H1Icon.vue'
+import H2Icon from '../icons/H2Icon.vue'
+import H3Icon from '../icons/H3Icon.vue'
+import H4Icon from '../icons/H4Icon.vue'
+import DropdownIcon from '../icons/DropdownIcon.vue'
 
 const emit = defineEmits(['edit'])
 const props = defineProps({
@@ -19,30 +24,21 @@ const handleClick = (value: unknown, close: () => void) => {
 <template>
   <Popover v-slot="{ open, close }" class="relative">
     <PopoverButton 
-      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 transition-all duration-300 delay-75 ease-in-out"
+      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 transition-all duration-300 delay-75 ease-in-out text-neutral-700 dark:text-neutral-50"
       :class="{
-        'bg-neutral-100/20': open || ['h1', 'h2', 'h3', 'h4'].includes(props.value),
-        'hover:bg-neutral-100/20': !open && !['h1', 'h2', 'h3', 'h4'].includes(props.value),
+        'bg-neutral-200 dark:bg-neutral-100/20': open || ['h1', 'h2', 'h3', 'h4'].includes(props.value),
+        'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !open && !['h1', 'h2', 'h3', 'h4'].includes(props.value),
       }"
+      title="Heading"
+      aria-label="Heading"
     >
-      <span v-if="!['h1','h2','h3','h4'].includes(props.value)" class="text-neutral-50 w-8 text-end">H</span>
-      <span v-else-if="props.value === 'h1'" class="text-neutral-50 text-xs w-8 text-end">
-        H<sub>1</sub>
-      </span>
-      <span v-else-if="props.value === 'h2'" class="text-neutral-50 text-xs w-8 text-end">
-        H<sub>2</sub>
-      </span>
-      <span v-else-if="props.value === 'h3'" class="text-neutral-50 text-xs w-8 text-end">
-        H<sub>3</sub>
-      </span>
-      <span v-else-if="props.value === 'h4'" class="text-neutral-50 text-xs w-8 text-end">
-        H<sub>4</sub>
-      </span>
-      <ChevronDownIcon 
-        class="h-3 w-3 text-neutral-50 transition-all duration-300 delay-75 ease-in-out" 
-        :class="{
-          'rotate-180': open,
-        }"
+      <HIcon v-if="!['h1','h2','h3','h4'].includes(props.value)" class="h-5 w-5" />
+      <H1Icon v-else-if="props.value === 'h1'" class="h-5 w-5" />
+      <H2Icon v-else-if="props.value === 'h2'" class="h-5 w-5" />
+      <H3Icon v-else-if="props.value === 'h3'" class="h-5 w-5" />
+      <H4Icon v-else-if="props.value === 'h4'" class="h-5 w-5" />
+      <DropdownIcon 
+        :class="`h-3 w-3 transition-all duration-300 delay-75 ease-in-out ${open ? 'rotate-180' : ''}`" 
       />
     </PopoverButton>
 
@@ -55,60 +51,59 @@ const handleClick = (value: unknown, close: () => void) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute left-0 z-10 mt-1.5 w-fit p-2 bg-neutral-900/60 backdrop-blur backdrop-filter rounded-2xl shadow-lg transition"
+        class="absolute left-0 z-10 mt-1.5 w-fit p-2 border border-neutral-100 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter rounded-2xl shadow-lg transition"
       >
         <div class="flex flex-col gap-1">
           <button 
             class="flex items-center gap-4 min-w-max cursor-pointer rounded-md p-1 outline-none focus:outline-none ring-0" 
             :class="{
-              'hover:bg-neutral-100/20 text-white/50': props.value !== 'h1',
-              'bg-neutral-100/20 text-white': props.value === 'h1',
+              'text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 dark:text-white/50': props.value !== 'h1',
+              'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h1',
             }"
             @click.prevent="handleClick('h1', close)"
+            title="Heading 1"
+            aria-label="Heading 1"
           >
-            <span class="flex items-center gap-1 text-xs">
-              H
-              <sub>1</sub>
-            </span>
+            <H1Icon class="h-4 w-4" />
             <span>Heading 1</span>
           </button>
           <button 
             class="flex items-center gap-4 min-w-max cursor-pointer rounded-md p-1 outline-none focus:outline-none ring-0" 
             :class="{
-              'hover:bg-neutral-100/20 text-white/50': props.value !== 'h2',
-              'bg-neutral-100/20 text-white': props.value === 'h2',
+              'text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 dark:text-white/50': props.value !== 'h2',
+              'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h2',
             }"
             @click.prevent="handleClick('h2', close)"
+            title="Heading 2"
+            aria-label="Heading 2"
           >
-            <span class="flex items-center gap-1 text-xs">
-              H<sub>2</sub>
-            </span>
+            <H2Icon class="h-4 w-4" />
             <span>Heading 2</span>
           </button>
           <button 
             class="flex items-center gap-4 min-w-max cursor-pointer rounded-md p-1 outline-none focus:outline-none ring-0" 
             :class="{
-              'hover:bg-neutral-100/20 text-white/50': props.value !== 'h3',
-              'bg-neutral-100/20 text-white': props.value === 'h3',
+              'text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 dark:text-white/50': props.value !== 'h3',
+              'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h3',
             }"
             @click.prevent="handleClick('h3', close)"
+            title="Heading 3"
+            aria-label="Heading 3"
           >
-            <span class="flex items-center gap-1 text-xs">
-              H<sub>3</sub>
-            </span>
+            <H3Icon class="h-4 w-4" />
             <span>Heading 3</span>
           </button>
           <button 
             class="flex items-center gap-4 min-w-max cursor-pointer rounded-md p-1 outline-none focus:outline-none ring-0" 
             :class="{
-              'hover:bg-neutral-100/20 text-white/50': props.value !== 'h4',
-              'bg-neutral-100/20 text-white': props.value === 'h4',
+              'text-neutral-400 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 dark:text-white/50': props.value !== 'h4',
+              'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h4',
             }"
             @click.prevent="handleClick('h4', close)"
+            title="Heading 4"
+            aria-label="Heading 4"
           >
-            <span class="flex items-center gap-1 text-xs">
-              H<sub>4</sub>
-            </span>
+            <H4Icon class="h-4 w-4" />
             <span>Heading 4</span>
           </button>
         </div>

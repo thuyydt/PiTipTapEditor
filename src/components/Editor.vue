@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 
 // tiptap editor and extensions
 import { useEditor, EditorContent } from '@tiptap/vue-3'
@@ -13,12 +13,27 @@ import Link from '@tiptap/extension-link'
 import Superscript from '@tiptap/extension-superscript'
 import Subscript from '@tiptap/extension-subscript'
 import Image from '@tiptap/extension-image'
+import TaskList from '@tiptap/extension-task-list'
+import TaskItem from '@tiptap/extension-task-item'
 
 // icon components
+import UndoIcon from './icons/UndoIcon.vue'
+import RedoIcon from './icons/RedoIcon.vue'
+import CodeBlockIcon from './icons/CodeBlockIcon.vue'
+import BlockQuoteIcon from './icons/BlockQuoteIcon.vue'
+import BoldIcon from './icons/BoldIcon.vue'
+import ItalicIcon from './icons/ItalicIcon.vue'
+import StrikeIcon from './icons/StrikeIcon.vue'
+import CodeIcon from './icons/CodeIcon.vue'
+import UnderlineIcon from './icons/UnderlineIcon.vue'
+import SuperscriptIcon from './icons/SuperscriptIcon.vue'
+import SubscriptIcon from './icons/SubscriptIcon.vue'
 import AlignCenterIcon from './icons/AlignCenterIcon.vue'
 import AlignLeftIcon from './icons/AlignLeftIcon.vue'
 import AlignJustifyIcon from './icons/AlignJustifyIcon.vue'
 import AlignRightIcon from './icons/AlignRightIcon.vue'
+import LightIcon from './icons/LightIcon.vue'
+import DarkIcon from './icons/DarkIcon.vue'
 
 // popover components
 import PopoverHeading from './toolbar/PopoverHeading.vue'
@@ -27,26 +42,24 @@ import PopoverColor from './toolbar/PopoverColor.vue'
 import PopoverLink from './toolbar/PopoverLink.vue'
 import PopoverImage from './toolbar/PopoverImage.vue'
 
-// tailwind icons
-import { 
-  ArrowUturnLeftIcon,
-  ArrowUturnRightIcon,
-  CodeBracketSquareIcon,
-  BoldIcon,
-  ItalicIcon,
-  StrikethroughIcon,
-  CodeBracketIcon,
-  UnderlineIcon,
-  MoonIcon,
-  SunIcon,
-} from '@heroicons/vue/24/outline'
-
 // define model
 const model = defineModel({ default: "<p></p>" })
 const mode = ref('dark') // light or dark
 const img = ref('')
 const headingValue = ref('')
 const listingValue = ref('')
+
+const props = defineProps({
+  class: {
+    type: String,
+    default: 'w-full h-full flex flex-col relative border border-neutral-200 dark:border-neutral-600 divide-y divide-neutral-200 dark:divide-neutral-500'
+  },
+})
+
+// append dark mode class to props.class
+const darkModeClass = computed(() => {
+  return props.class + (mode.value === 'dark' ? ' dark' : '')
+})
 
 const editor = useEditor({
   content: model.value,
@@ -69,10 +82,12 @@ const editor = useEditor({
     Superscript,
     Subscript,
     Image,
+    TaskItem,
+    TaskList,
   ],
   editorProps: {
     attributes: {
-      class: 'bg-neutral-100 text-neutral-900 p-4 outline-none focus:outline-none ring-0 h-full w-full rounded border border-neutral-200',
+      class: 'bg-white dark:bg-neutral-600 p-4 outline-none text-neutral-900 dark:text-white focus:outline-none ring-0 h-full w-full',
     },
   },
   onSelectionUpdate({ editor }) {
@@ -143,7 +158,11 @@ const toogleHeading = (value: string) => {
 }
 
 const toogleListing = (value: string) => {
-  // console.log('Listing changed to:', value)
+  if (value == 'task') {
+    editor.value?.commands.toggleTaskList()
+    return
+  }
+
   if (value === 'number') {
     editor.value?.commands.toggleOrderedList()
     return
@@ -163,49 +182,55 @@ const toogleLink = (value: string) => {
 
 const setImage = () => {
   editor.value?.commands.setImage({ src: img.value, alt: 'image' })
-  // console.log('Image changed to:', img.value)
 }
 </script>
 <template>
-  <div class="w-full h-full flex flex-col relative"
-    :class="{ 'dark': mode === 'dark' }"
-  >
+  <div :class="darkModeClass">
     <!-- Toolbar -->
-    <div class="w-full sticky top-0 bg-black/10 dark:bg-neutral-600 z-10 h-auto flex items-center flex-wrap p-1 gap-1 rounded-t justify-between">
+    <div class="w-full sticky top-0 bg-white dark:bg-neutral-600 z-10 h-auto flex items-center flex-wrap p-1 gap-1 justify-between">
       <div class="flex items-center flex-wrap w-fit gap-1">
         <!-- dark/light mode -->
-        <button @click.prevent="toggleDarkMode" class="rounded-md hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex md:hidden items-center gap-1 min-w-8 justify-center">
-          <SunIcon v-if="mode === 'light'" class="w-5 h-5 text-neutral-50" />
-          <MoonIcon v-else class="w-5 h-5 text-neutral-50" />
+        <button 
+          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex md:hidden items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+          @click.prevent="toggleDarkMode"
+          title="Toggle dark/light mode"
+          aria-label="Toggle dark/light mode" 
+        >
+          <LightIcon v-if="mode === 'light'" class="w-5 h-5" />
+          <DarkIcon v-else class="w-5 h-5" />
         </button>
-        <span class="md:hidden w-px h-6 bg-neutral-50/20"></span>
+        <span class="md:hidden w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
 
         <!-- Group 1 -->
         <!-- Undo -->
         <button 
           type="button"
-          @click.prevent="editor?.commands.undo" 
           class="rounded-md p-1 hover:opacity-80 cursor-pointer"
           :class="{
-            'hover:bg-neutral-100/20': !editor?.can().undo(),
-            'bg-neutral-100/20': editor?.can().undo(),
+            'text-neutral-300 dark:text-neutral-50/20': !editor?.can().undo(),
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20 text-neutral-700 dark:text-neutral-50': editor?.can().undo(),
           }"
+          @click.prevent="editor?.commands.undo" 
+          title="Undo"
+          aria-label="Undo"
         >
-          <ArrowUturnLeftIcon class="h-5 w-5 text-neutral-50" />
+          <UndoIcon class="h-5 w-5" />
         </button>
         <!-- Redo -->
         <button 
           type="button"
-          @click.prevent="editor?.commands.redo" 
           class="rounded-md p-1 hover:opacity-80 cursor-pointer"
           :class="{
-            'hover:bg-neutral-100/20': !editor?.can().redo(),
-            'bg-neutral-100/20': editor?.can().redo(),
+            'text-neutral-300 dark:text-neutral-50/20': !editor?.can().redo(),
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20 text-neutral-700 dark:text-neutral-50': editor?.can().redo(),
           }"
+          @click.prevent="editor?.commands.redo" 
+          title="Redo"
+          aria-label="Redo"
         >
-          <ArrowUturnRightIcon class="h-5 w-5 text-neutral-50" />
+          <RedoIcon class="h-5 w-5" />
         </button>
-        <span class="w-px h-6 bg-neutral-50/20"></span>
+        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
 
         <!-- Group 2 -->
         <!-- Heading -->
@@ -221,51 +246,72 @@ const setImage = () => {
           type="button"
           class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
           :class="{
-            'hover:bg-neutral-100/20': !editor?.isActive('codeBlock'),
-            'bg-neutral-100/20': editor?.isActive('codeBlock'),
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('codeBlock'),
+            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('codeBlock'),
           }"
           @click.prevent="editor?.commands.setNode('codeBlock')"
+          title="Code block"
+          aria-label="Code block"
         >
-          <CodeBracketSquareIcon class="h-5 w-5 text-neutral-50" />
+          <CodeBlockIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-50" />
         </button>
-        <span class="w-px h-6 bg-neutral-50/20"></span>
+        <button 
+          type="button"
+          class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
+          :class="{
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('blockQuote'),
+            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('blockQuote'),
+          }"
+          @click.prevent="editor?.commands.setNode('blockQuote')"
+          title="Blockquote"
+          aria-label="Blockquote"
+        >
+          <BlockQuoteIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-50" />
+        </button>
+        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
 
         <!-- Group 3 -->
         <!-- Bold -->
         <button 
           type="button"
-          @click.prevent="editor?.commands.toggleBold" 
           class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
           :class="{
-            'hover:bg-neutral-100/20': !editor?.isActive('bold'),
-            'bg-neutral-100/20': editor?.isActive('bold'),
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('bold'),
+            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('bold'),
           }"
+          @click.prevent="editor?.commands.toggleBold" 
+          title="Bold"
+          aria-label="Bold"
         >
-          <BoldIcon class="w-5 h-5 text-neutral-50" />
+          <BoldIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
         </button>
         <!-- Italic -->
         <button 
           type="button"
-          @click.prevent="editor?.commands.toggleItalic" 
           class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center"
           :class="{
-            'hover:bg-neutral-100/20': !editor?.isActive('italic'),
-            'bg-neutral-100/20': editor?.isActive('italic'),
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('italic'),
+            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('italic'),
           }"
+          @click.prevent="editor?.commands.toggleItalic" 
+          title="Italic"
+          aria-label="Italic"
         >
-          <ItalicIcon class="w-5 h-5 text-neutral-50" />
+          <ItalicIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
         </button>
         <!-- Strike -->
         <button 
           type="button"
-          @click.prevent="editor?.commands.toggleStrike" 
           class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
           :class="{
-            'hover:bg-neutral-100/20': !editor?.isActive('strike'),
-            'bg-neutral-100/20': editor?.isActive('strike'),
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('strike'),
+            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('strike'),
           }"
+          @click.prevent="editor?.commands.toggleStrike" 
+          title="Strike"
+          aria-label="Strike"
         >
-          <StrikethroughIcon class="w-5 h-5 text-neutral-50" />
+          <StrikeIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
         </button>
         <!-- Code -->
         <button 
@@ -273,11 +319,13 @@ const setImage = () => {
           @click.prevent="editor?.commands.toggleCode" 
           class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
           :class="{
-            'hover:bg-neutral-100/20': !editor?.isActive('code'),
-            'bg-neutral-100/20': editor?.isActive('code'),
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('code'),
+            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('code'),
           }"
+          title="Code"
+          aria-label="Code"
         >
-          <CodeBracketIcon class="w-5 h-5 text-neutral-50" />
+          <CodeIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
         </button>
         <!-- Underline -->
         <button 
@@ -285,11 +333,13 @@ const setImage = () => {
           @click.prevent="editor?.commands.toggleUnderline"
           class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
           :class="{
-            'hover:bg-neutral-100/20': !editor?.isActive('underline'),
-            'bg-neutral-100/20': editor?.isActive('underline'),
+            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('underline'),
+            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('underline'),
           }"
+          title="Underline"
+          aria-label="Underline"
         >
-          <UnderlineIcon class="w-5 h-5 text-neutral-50" />
+          <UnderlineIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
         </button>
         <!-- Highlight -->
         <div>
@@ -303,37 +353,67 @@ const setImage = () => {
             @edit="toogleLink" 
           />
         </div>
-        <span class="w-px h-6 bg-neutral-50/20"></span>
+        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
 
         <!-- Group 4 -->
         <!-- Superscript -->
-        <button @click.prevent="editor?.commands.toggleSuperscript" class="rounded-md hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center">
-          <span class="text-neutral-50">x<sup>2</sup></span>
+        <button 
+          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+          @click.prevent="editor?.commands.toggleSuperscript" 
+          title="Superscript"
+          aria-label="Superscript"
+        >
+          <SuperscriptIcon class="w-5 h-5" />
         </button>
         <!-- Subscript -->
-        <button @click.prevent="editor?.commands.toggleSubscript" class="rounded-md hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center">
-          <span class="text-neutral-50">x<sub>2</sub></span>
+        <button 
+          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+          @click.prevent="editor?.commands.toggleSubscript" 
+          title="Subscript"
+          aria-label="Subscript"
+        >
+          <SubscriptIcon class="w-5 h-5" />
         </button>
-        <span class="w-px h-6 bg-neutral-50/20"></span>
+        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
 
         <!-- Group 5 -->
         <!-- Align left -->
-        <button @click.prevent="editor?.commands.toggleTextAlign('left')" class="rounded-md hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center">
-          <AlignLeftIcon class="w-5 h-5 text-neutral-50" />
+        <button 
+          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+          @click.prevent="editor?.commands.toggleTextAlign('left')" 
+          title="Align left"
+          aria-label="Align left"
+        >
+          <AlignLeftIcon class="w-5 h-5" />
         </button>
         <!-- Align center -->
-        <button @click.prevent="editor?.commands.toggleTextAlign('center')" class="rounded-md hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center">
-          <AlignCenterIcon class="w-5 h-5 text-neutral-50" />
+        <button 
+          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+          @click.prevent="editor?.commands.toggleTextAlign('center')" 
+          title="Align center"
+          aria-label="Align center"
+        >
+          <AlignCenterIcon class="w-5 h-5 " />
         </button>
         <!-- Align right -->
-        <button @click.prevent="editor?.commands.toggleTextAlign('right')" class="rounded-md hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center">
-          <AlignRightIcon class="w-5 h-5 text-neutral-50" />
+        <button 
+          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+          @click.prevent="editor?.commands.toggleTextAlign('right')" 
+          title="Align right"
+          aria-label="Align right"
+        >
+          <AlignRightIcon class="w-5 h-5" />
         </button>
         <!-- Align justify -->
-        <button @click.prevent="editor?.commands.toggleTextAlign('justify')" class="rounded-md hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center">
-          <AlignJustifyIcon class="w-5 h-5 text-neutral-50" />
+        <button 
+          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+          @click.prevent="editor?.commands.toggleTextAlign('justify')" 
+          title="Align justify"
+          aria-label="Align justify"
+        >
+          <AlignJustifyIcon class="w-5 h-5" />
         </button>
-        <span class="w-px h-6 bg-neutral-50/20"></span>
+        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
 
         <!-- Group 6 -->
         <div>
@@ -342,14 +422,19 @@ const setImage = () => {
       </div>
 
       <!-- dark/light mode -->
-      <button @click.prevent="toggleDarkMode" class="rounded-md hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer hidden md:flex items-center gap-1 min-w-8 justify-center">
-        <SunIcon v-if="mode === 'light'" class="w-5 h-5 text-neutral-50" />
-        <MoonIcon v-else class="w-5 h-5 text-neutral-50" />
+      <button 
+        class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer hidden md:flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+        @click.prevent="toggleDarkMode" 
+        title="Toggle dark/light mode"
+        aria-label="Toggle dark/light mode"
+      >
+        <LightIcon v-if="mode === 'light'" class="w-5 h-5" />
+        <DarkIcon v-else class="w-5 h-5" />
       </button>
     </div>
 
     <!-- Editor -->
-    <EditorContent :editor="editor" class="min-h-full w-full overflow-auto" />
+    <EditorContent :editor="editor" class="h-full w-full overflow-auto" />
   </div>
 </template>
 

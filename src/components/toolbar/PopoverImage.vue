@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
-import { ArrowTopRightOnSquareIcon, PhotoIcon } from '@heroicons/vue/24/outline'
+import LinkTargetIcon from '../icons/LinkTargetIcon.vue'
+import ImageIcon from '../icons/ImageIcon.vue'
 
 const emit = defineEmits(['edit'])
 
@@ -18,10 +19,12 @@ const handleClick = (close: () => void) => {
 <template>
   <Popover v-slot="{ close }" class="relative">
     <PopoverButton 
-      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 text-neutral-50 hover:bg-neutral-100/20 transition-all duration-300 delay-75 ease-in-out"
+      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 text-neutral-700 dark:text-neutral-50 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 transition-all duration-300 delay-75 ease-in-out"
+      title="Add image"
+      aria-label="Add image"
     >
-      <PhotoIcon class="w-5 h-5" />
-      <span class="text-xs">add</span>
+      <ImageIcon class="w-5 h-5" />
+      <span class="text-xs">Add</span>
     </PopoverButton>
 
     <transition
@@ -33,31 +36,31 @@ const handleClick = (close: () => void) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute left-1/2 -translate-x-1/2 transform z-10 mt-2 w-fit p-2 bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg"
+        class="absolute left-1/2 -translate-x-1/2 transform z-10 mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg border border-neutral-100"
       >
         <div class="flex flex-col gap-2 p-2">
           <div class="flex flex-col">
-            <span class="text-neutral-50">
+            <span class="text-neutral-700 dark:text-neutral-50">
               Image URL
             </span>
             <div class="w-64 md:w-80 flex gap-2">
               <div class="grow">
                 <input
                   type="text"
-                  class="w-full bg-white/20 text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
+                  class="w-full bg-neutral-200 dark:bg-white/20 text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
                   placeholder="https://example.com/img.png"
                   v-model="img"
                   @keyup.enter="handleClick(close)"
                 />
               </div>
               <div class="flex-none w-fit">
-                <div class="flex p-1 items-center group rounded-lg hover:bg-neutral-200/30 transition-all duration-200 ease-in-out delay-75 leading-none h-fit cursor-pointer">
+                <div class="flex p-1 items-center group rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-200/30 transition-all duration-200 ease-in-out delay-75 leading-none h-fit cursor-pointer">
                   <a 
                     :href="img" 
                     target="_blank"
                     title="Preview image"
                   >
-                    <ArrowTopRightOnSquareIcon class="w-5 h-5 text-neutral-50"/>
+                    <LinkTargetIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50"/>
                   </a>
                 </div>
               </div>
@@ -65,29 +68,29 @@ const handleClick = (close: () => void) => {
           </div>
           <div class="flex items-center gap-4">
             <div class="flex items-center gap-0.5">
-              <span class="text-neutral-50">Width</span>
+              <span class="text-neutral-700 dark:text-neutral-50">Width</span>
               <div>
                 <input
                   type="number"
-                  class="w-20 bg-white/20 text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
+                  class="w-20 bg-neutral-200 dark:bg-white/20 text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
                   placeholder="Width"
                 />
               </div>
-              <span class="text-neutral-50">px</span>
+              <span class="text-neutral-700 dark:text-neutral-50">px</span>
             </div>
             <div class="flex items-center gap-0.5">
-              <span class="text-neutral-50">Height</span>
+              <span class="text-neutral-700 dark:text-neutral-50">Height</span>
               <div>
                 <input
                   type="number"
-                  class="w-20 bg-white/20 text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
+                  class="w-20 bg-neutral-200 dark:bg-white/20 text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
                   placeholder="Height"
                 />
               </div>
-              <span class="text-neutral-50">px</span>
+              <span class="text-neutral-700 dark:text-neutral-50">px</span>
             </div>
           </div>
-          <div class="text-xs text-neutral-50/50">
+          <div class="text-xs text-neutral-400 dark:text-neutral-50/50">
             Leave blank the Width and the Height to use the original size.
           </div>
           <div class="flex items-center justify-center gap-2 mt-4">
@@ -103,7 +106,7 @@ const handleClick = (close: () => void) => {
             <div>
               <button 
                 type="button" 
-                class="group p-1 rounded-lg hover:opacity-80 bg-neutral-50/20 transition-all duration-200 ease-in-out delay-75 text-neutral-50 cursor-pointer px-4 min-w-24" 
+                class="group p-1 rounded-lg hover:opacity-80 bg-neutral-200 dark:bg-neutral-50/20 transition-all duration-200 ease-in-out delay-75 text-neutral-700 dark:text-neutral-50 cursor-pointer px-4 min-w-24" 
                 @click.prevent="close"
               >
                 Cancel
