@@ -15,6 +15,11 @@ const props = defineProps({
   },
 })
 
+const isOpen = defineModel({
+  type: Boolean,
+  default: false,
+})
+
 const handleClick = (value: unknown, close: () => void) => {
   emit('edit', value)
 
@@ -31,6 +36,7 @@ const handleClick = (value: unknown, close: () => void) => {
       }"
       title="Heading"
       aria-label="Heading"
+      @click="isOpen = !isOpen"
     >
       <HIcon v-if="!['h1','h2','h3','h4'].includes(props.value)" class="h-5 w-5" />
       <H1Icon v-else-if="props.value === 'h1'" class="h-5 w-5" />

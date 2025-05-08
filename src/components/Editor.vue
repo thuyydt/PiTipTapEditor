@@ -38,7 +38,9 @@ import DarkIcon from './icons/DarkIcon.vue'
 
 // popover components
 import PopoverHeading from './toolbar/PopoverHeading.vue'
+import MobileHeadling from './toolbar/MobileHeadling.vue'
 import PopoverList from './toolbar/PopoverList.vue'
+import MobileList from './toolbar/MobileList.vue'
 import PopoverTextColor from './toolbar/PopoverTextColor.vue'
 import PopoverHighlight from './toolbar/PopoverHighlight.vue'
 import PopoverLink from './toolbar/PopoverLink.vue'
@@ -46,10 +48,25 @@ import PopoverImage from './toolbar/PopoverImage.vue'
 
 // define model
 const model = defineModel({ default: "<p></p>" })
+
+const mobileToolbar = ref<HTMLElement | null>(null)
 const mode = ref('dark') // light or dark
 const img = ref('')
+
 const headingValue = ref('')
+const openHeading = ref(false)
+
 const listingValue = ref('')
+const openListing = ref(false)
+
+// click outside mobileToolbar > * to close popover
+document.addEventListener('click', (event) => {
+  const target = event.target as HTMLElement
+  if (mobileToolbar.value && !mobileToolbar.value.contains(target)) {
+    openHeading.value = false
+    openListing.value = false
+  }
+})
 
 const props = defineProps({
   class: {
@@ -186,7 +203,7 @@ const setImage = () => {
 }
 </script>
 <template>
-  <div :class="darkModeClass" class="pi-tiptap-editor relative rounded">
+  <div :class="darkModeClass" class="pi-tiptap-editor relative">
     <!-- Toolbar -->
     <div 
       class="w-full absolute bottom-0 lg:top-0 lg:sticky border-t lg:border-t-0 dark:border-neutral-500 bg-white dark:bg-neutral-600 z-10 h-auto flex items-center p-1 gap-1 justify-between min-w-full pi-tiptap-editor-toolbar"
@@ -226,12 +243,11 @@ const setImage = () => {
         <!-- Group 2 -->
         <!-- Heading -->
         <div>
-          <PopoverHeading :value="headingValue" @edit="toogleHeading" />
+          <PopoverHeading v-model="openHeading" :value="headingValue" @edit="toogleHeading" />
         </div>
         <!-- List -->
         <div>
-          <PopoverList :value="listingValue" @edit="toogleListing" 
-          />
+          <PopoverList v-model="openListing" :value="listingValue" @edit="toogleListing" />
         </div>
         <!-- Code block -->
         <button 
@@ -437,6 +453,19 @@ const setImage = () => {
 
     <!-- Editor -->
     <EditorContent :editor="editor" class="h-full w-full overflow-auto mb-9 lg:mb-0 pi-tiptap-editor-content" />
+
+    <div ref="mobileToolbar" class="lg:hidden">
+      <MobileHeadling
+        :open="openHeading"
+        :value="headingValue" 
+        @edit="toogleHeading"
+      />
+      <MobileList
+        :open="openListing"
+        :value="listingValue" 
+        @edit="toogleListing"
+      />
+    </div>
   </div>
 </template>
 

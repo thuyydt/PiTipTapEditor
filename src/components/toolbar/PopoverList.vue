@@ -13,6 +13,11 @@ const props = defineProps({
   },
 })
 
+const isOpen = defineModel({
+  type: Boolean,
+  default: false,
+})
+
 const handleClick = (value: unknown, close: () => void) => {
   emit('edit', value)
 
@@ -29,6 +34,7 @@ const handleClick = (value: unknown, close: () => void) => {
       }"
       title="List"
       aria-label="List"
+      @click="isOpen = !isOpen"
     >
       <OrderedListIcon v-if="props.value === 'number'" class="h-5 w-5" />
       <BulletListIcon v-else class="h-5 w-5 " />

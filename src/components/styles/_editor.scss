@@ -5,3 +5,9 @@
   scrollbar-width: 0;
   scrollbar-color: transparent transparent;
 }
+@media (width < 64rem) {
+  // https://tailwindcss.com/docs/responsive-design
+  :deep(.pi-tiptap-editor-toolbar) {
+    overflow-x: auto;
+  }
+}
