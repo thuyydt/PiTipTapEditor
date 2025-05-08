@@ -62,7 +62,7 @@ const handleClick = (value: unknown) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute left-1/2 -translate-x-1/2 transform z-10 bottom-9 md:bottom-auto md:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-filter backdrop-blur rounded-2xl shadow-lg transition border border-neutral-100 dark:border-neutral-100/20"
+        class="absolute left-1/2 -translate-x-1/2 transform z-10 bottom-9 lg:bottom-auto mlgd:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-filter backdrop-blur rounded-2xl shadow-lg transition border border-neutral-100 dark:border-neutral-100/20"
       >
         <div class="flex flex-wrap items-center gap-2 min-w-sm">
           <div v-for="color in props.colors" :key="color"

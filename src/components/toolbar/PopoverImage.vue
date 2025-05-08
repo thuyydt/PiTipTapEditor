@@ -36,14 +36,14 @@ const handleClick = (close: () => void) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute right-0 transform z-10 bottom-9 md:bottom-auto md:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg border border-neutral-100 dark:border-neutral-100/20"
+        class="absolute right-0 transform z-10 bottom-9 lg:bottom-auto lg:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg border border-neutral-100 dark:border-neutral-100/20"
       >
         <div class="flex flex-col gap-2 p-2">
           <div class="flex flex-col">
             <span class="text-neutral-700 dark:text-neutral-50">
               Image URL
             </span>
-            <div class="w-64 md:w-80 flex gap-2">
+            <div class="w-64 lg:w-80 flex gap-2">
               <div class="grow">
                 <input
                   type="text"

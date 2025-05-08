@@ -189,7 +189,7 @@ const setImage = () => {
   <div :class="darkModeClass" class="pi-tiptap-editor relative rounded">
     <!-- Toolbar -->
     <div 
-      class="w-full absolute bottom-0 md:top-0 md:sticky border-t md:border-t-0 dark:border-neutral-500 bg-white dark:bg-neutral-600 z-10 h-auto flex items-center p-1 gap-1 justify-between min-w-full pi-tiptap-editor-toolbar"
+      class="w-full absolute bottom-0 lg:top-0 lg:sticky border-t lg:border-t-0 dark:border-neutral-500 bg-white dark:bg-neutral-600 z-10 h-auto flex items-center p-1 gap-1 justify-between min-w-full pi-tiptap-editor-toolbar"
     >
       <div class="flex items-center w-fit gap-1">
         <!-- Group 1 -->
@@ -436,7 +436,7 @@ const setImage = () => {
     </div>
 
     <!-- Editor -->
-    <EditorContent :editor="editor" class="h-full w-full overflow-auto mb-9 md:mb-0 pi-tiptap-editor-content" />
+    <EditorContent :editor="editor" class="h-full w-full overflow-auto mb-9 lg:mb-0 pi-tiptap-editor-content" />
   </div>
 </template>
 
