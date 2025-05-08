@@ -35,6 +35,11 @@ const props = defineProps({
   },
 })
 
+const isOpen = defineModel({
+  type: Boolean,
+  default: false,
+})
+
 const handleClick = (value: unknown) => {
   emit('edit', value)
 }
@@ -49,6 +54,7 @@ const handleClick = (value: unknown) => {
       }"
       title="Color"
       aria-label="Color"
+      @click="isOpen = !isOpen"
     >
       <ColorIcon class="w-5 h-5 fill-neutral-700 dark:fill-neutral-50" />
     </PopoverButton>

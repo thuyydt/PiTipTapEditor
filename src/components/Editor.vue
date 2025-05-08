@@ -42,6 +42,7 @@ import MobileHeadling from './toolbar/MobileHeadling.vue'
 import PopoverList from './toolbar/PopoverList.vue'
 import MobileList from './toolbar/MobileList.vue'
 import PopoverTextColor from './toolbar/PopoverTextColor.vue'
+import MobileTextColor from './toolbar/MobileTextColor.vue'
 import PopoverHighlight from './toolbar/PopoverHighlight.vue'
 import PopoverLink from './toolbar/PopoverLink.vue'
 import PopoverImage from './toolbar/PopoverImage.vue'
@@ -59,12 +60,15 @@ const openHeading = ref(false)
 const listingValue = ref('')
 const openListing = ref(false)
 
+const openTextColor = ref(false)
+
 // click outside mobileToolbar > * to close popover
 document.addEventListener('click', (event) => {
   const target = event.target as HTMLElement
   if (mobileToolbar.value && !mobileToolbar.value.contains(target)) {
     openHeading.value = false
     openListing.value = false
+    openTextColor.value = false
   }
 })
 
@@ -350,8 +354,9 @@ const setImage = () => {
           <UnderlineIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
         </button>
         <!-- Text Color -->
-        <div>
+        <div> 
           <PopoverTextColor 
+            v-model="openTextColor"
             :value="editor?.getAttributes('textStyle').color" 
             @edit="editor?.commands.setColor($event)" 
           />
@@ -464,6 +469,11 @@ const setImage = () => {
         :open="openListing"
         :value="listingValue" 
         @edit="toogleListing"
+      />
+      <MobileTextColor
+        :open="openTextColor"
+        :value="editor?.getAttributes('textStyle').color" 
+        @edit="editor?.commands.setColor($event)" 
       />
     </div>
   </div>
