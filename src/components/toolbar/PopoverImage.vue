@@ -36,7 +36,7 @@ const handleClick = (close: () => void) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute left-1/2 -translate-x-1/2 transform z-10 mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg border border-neutral-100"
+        class="absolute right-0 transform z-10 bottom-9 md:bottom-auto md:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg border border-neutral-100 dark:border-neutral-100/20"
       >
         <div class="flex flex-col gap-2 p-2">
           <div class="flex flex-col">

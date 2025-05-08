@@ -1,3 +1,7 @@
 :deep(.tiptap.ProseMirror) {
   min-height: max-content !important;
 }
+:deep(.pi-tiptap-editor-toolbar) {
+  scrollbar-width: 0;
+  scrollbar-color: transparent transparent;
+}

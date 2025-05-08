@@ -48,10 +48,10 @@ const handleClick = (value: unknown, close: () => void) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute left-1/2 -translate-x-1/2 transform z-10 mt-2 w-fit p-2 border border-neutral-200 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg"
+        class="absolute left-1/2 -translate-x-1/2 transform z-10 bottom-9 md:bottom-auto md:mt-2 w-fit p-2 border border-neutral-100 dark:border-neutral-100/20 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg"
       >
         <div class="flex items-center divide-x divide-neutral-200 dark:divide-neutral-200/20 px-2">
-          <div class="w-48 md:w-80 relative flex items-center">
+          <div class="w-40 md:w-64 relative flex items-center">
             <input
               type="text"
               class="w-full bg-transparent text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0"

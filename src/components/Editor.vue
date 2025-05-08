@@ -15,6 +15,7 @@ import Subscript from '@tiptap/extension-subscript'
 import Image from '@tiptap/extension-image'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
+import Highlight from '@tiptap/extension-highlight'
 
 // icon components
 import UndoIcon from './icons/UndoIcon.vue'
@@ -38,7 +39,8 @@ import DarkIcon from './icons/DarkIcon.vue'
 // popover components
 import PopoverHeading from './toolbar/PopoverHeading.vue'
 import PopoverList from './toolbar/PopoverList.vue'
-import PopoverColor from './toolbar/PopoverColor.vue'
+import PopoverTextColor from './toolbar/PopoverTextColor.vue'
+import PopoverHighlight from './toolbar/PopoverHighlight.vue'
 import PopoverLink from './toolbar/PopoverLink.vue'
 import PopoverImage from './toolbar/PopoverImage.vue'
 
@@ -52,7 +54,7 @@ const listingValue = ref('')
 const props = defineProps({
   class: {
     type: String,
-    default: 'w-full h-full flex flex-col relative border border-neutral-200 dark:border-neutral-600 divide-y divide-neutral-200 dark:divide-neutral-500'
+    default: 'w-full h-full flex flex-col border border-neutral-200 dark:border-neutral-600 divide-y divide-neutral-200 dark:divide-neutral-500',
   },
 })
 
@@ -72,7 +74,9 @@ const editor = useEditor({
     Underline,
     TextStyle,
     Color,
-    FontFamily,
+    FontFamily.configure({
+      types: ['textStyle'],
+    }),
     TextAlign.configure({
       types: ['heading', 'paragraph'],
       defaultAlignment: 'left',
@@ -84,6 +88,7 @@ const editor = useEditor({
     Image,
     TaskItem,
     TaskList,
+    Highlight,
   ],
   editorProps: {
     attributes: {
@@ -112,8 +117,6 @@ const editor = useEditor({
     }
   },
   onFocus({ editor }) {
-    // console.log('Editor focused:', editor)
-
     // check if focused to image
     const image = editor.getAttributes('image')
     if (image.src) {
@@ -121,8 +124,6 @@ const editor = useEditor({
     }
   },
   onBlur({ editor }) {
-    // console.log('Editor blurred:', editor)
-
     // get the current heading level
     headingValue.value = editor.getAttributes('heading').level || ''
 
@@ -185,22 +186,12 @@ const setImage = () => {
 }
 </script>
 <template>
-  <div :class="darkModeClass">
+  <div :class="darkModeClass" class="pi-tiptap-editor relative rounded">
     <!-- Toolbar -->
-    <div class="w-full sticky top-0 bg-white dark:bg-neutral-600 z-10 h-auto flex items-center flex-wrap p-1 gap-1 justify-between">
-      <div class="flex items-center flex-wrap w-fit gap-1">
-        <!-- dark/light mode -->
-        <button 
-          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex md:hidden items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
-          @click.prevent="toggleDarkMode"
-          title="Toggle dark/light mode"
-          aria-label="Toggle dark/light mode" 
-        >
-          <LightIcon v-if="mode === 'light'" class="w-5 h-5" />
-          <DarkIcon v-else class="w-5 h-5" />
-        </button>
-        <span class="md:hidden w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
-
+    <div 
+      class="w-full absolute bottom-0 md:top-0 md:sticky border-t md:border-t-0 dark:border-neutral-500 bg-white dark:bg-neutral-600 z-10 h-auto flex items-center p-1 gap-1 justify-between min-w-full pi-tiptap-editor-toolbar"
+    >
+      <div class="flex items-center w-fit gap-1">
         <!-- Group 1 -->
         <!-- Undo -->
         <button 
@@ -239,7 +230,8 @@ const setImage = () => {
         </div>
         <!-- List -->
         <div>
-          <PopoverList :value="listingValue" @edit="toogleListing" />
+          <PopoverList :value="listingValue" @edit="toogleListing" 
+          />
         </div>
         <!-- Code block -->
         <button 
@@ -262,7 +254,7 @@ const setImage = () => {
             'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('blockQuote'),
             'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('blockQuote'),
           }"
-          @click.prevent="editor?.commands.setNode('blockQuote')"
+          @click.prevent="editor?.commands.toggleBlockquote"
           title="Blockquote"
           aria-label="Blockquote"
         >
@@ -341,9 +333,19 @@ const setImage = () => {
         >
           <UnderlineIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
         </button>
-        <!-- Highlight -->
+        <!-- Text Color -->
         <div>
-          <PopoverColor :value="editor?.getAttributes('textStyle').color" @edit="editor?.commands.setColor($event)" />
+          <PopoverTextColor 
+            :value="editor?.getAttributes('textStyle').color" 
+            @edit="editor?.commands.setColor($event)" 
+          />
+        </div>
+        <!-- Text Color -->
+        <div>
+          <PopoverHighlight 
+            :value="editor?.getAttributes('textStyle').background" 
+            @edit="editor?.commands.toggleHighlight({ color: $event })" 
+          />
         </div>
         <!-- Link -->
         <div>
@@ -423,7 +425,7 @@ const setImage = () => {
 
       <!-- dark/light mode -->
       <button 
-        class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer hidden md:flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+        class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
         @click.prevent="toggleDarkMode" 
         title="Toggle dark/light mode"
         aria-label="Toggle dark/light mode"
@@ -434,7 +436,7 @@ const setImage = () => {
     </div>
 
     <!-- Editor -->
-    <EditorContent :editor="editor" class="h-full w-full overflow-auto" />
+    <EditorContent :editor="editor" class="h-full w-full overflow-auto mb-9 md:mb-0 pi-tiptap-editor-content" />
   </div>
 </template>
 
