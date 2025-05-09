@@ -30,7 +30,8 @@ Simple Tiptap Editor with Vue 3 and Tailwind CSS.
 - Code
 - Text color
 - Link
-- Image
+- Youtube
+- Image & Image Resize
 - Subscript
 - Superscript
 - Text align
@@ -61,6 +62,7 @@ npm install @tiptap/extension-task-list
 npm install @tiptap/extension-text-align
 npm install @tiptap/extension-typography
 npm install @tiptap/extension-underline
+npm install @tiptap/extension-youtube
 npm install @tiptap/pm
 npm install @tiptap/starter-kit
 npm install @tiptap/vue-3
@@ -100,6 +102,7 @@ in your-file.vue
         enableSuperscript: true,
         enableSubscript: true,
         enableTextAlign: true,
+        enableYoutube: true,
         enableImage: true,
       }"
     />
