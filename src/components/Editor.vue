@@ -44,33 +44,27 @@ import MobileList from './toolbar/MobileList.vue'
 import PopoverTextColor from './toolbar/PopoverTextColor.vue'
 import MobileTextColor from './toolbar/MobileTextColor.vue'
 import PopoverHighlight from './toolbar/PopoverHighlight.vue'
+import MobileHighlight from './toolbar/MobileHighlight.vue'
 import PopoverLink from './toolbar/PopoverLink.vue'
+import MobileLink from './toolbar/MobileLink.vue'
 import PopoverImage from './toolbar/PopoverImage.vue'
+import MobileImage from './toolbar/MobileImage.vue'
 
 // define model
 const model = defineModel({ default: "<p></p>" })
 
 const mobileToolbar = ref<HTMLElement | null>(null)
 const mode = ref('dark') // light or dark
-const img = ref('')
+const img = ref('') // image src
 
-const headingValue = ref('')
-const openHeading = ref(false)
-
-const listingValue = ref('')
-const openListing = ref(false)
-
-const openTextColor = ref(false)
-
-// click outside mobileToolbar > * to close popover
-document.addEventListener('click', (event) => {
-  const target = event.target as HTMLElement
-  if (mobileToolbar.value && !mobileToolbar.value.contains(target)) {
-    openHeading.value = false
-    openListing.value = false
-    openTextColor.value = false
-  }
-})
+const listingValue = ref('') // bullet, number, task
+const headingValue = ref('') // 1, 2, 3, 4
+const openHeading = ref(false) // mobile heading
+const openListing = ref(false) // mobile listing
+const openTextColor = ref(false) // mobile text color
+const openHighlight = ref(false) // mobile highlight
+const openLink = ref(false) // mobile link
+const openImage = ref(false) // mobile image
 
 const props = defineProps({
   class: {
@@ -176,7 +170,6 @@ const toggleDarkMode = () => {
 
 const toogleHeading = (value: string) => {
   editor.value?.commands.toggleNode("heading", "paragraph", { level: value })
-  // console.log('Heading changed to:', value)
 }
 
 const toogleListing = (value: string) => {
@@ -205,6 +198,20 @@ const toogleLink = (value: string) => {
 const setImage = () => {
   editor.value?.commands.setImage({ src: img.value, alt: 'image' })
 }
+
+// click outside mobileToolbar > * to close popover
+document.addEventListener('click', (event) => {
+  const target = event.target as HTMLElement
+  if (!mobileToolbar.value) return
+  if (!mobileToolbar.value.contains(target)) {
+    openHeading.value = false
+    openListing.value = false
+    openTextColor.value = false
+    openHighlight.value = false
+    openLink.value = false
+    openImage.value = false
+  }
+})
 </script>
 <template>
   <div :class="darkModeClass" class="pi-tiptap-editor relative">
@@ -247,11 +254,29 @@ const setImage = () => {
         <!-- Group 2 -->
         <!-- Heading -->
         <div>
-          <PopoverHeading v-model="openHeading" :value="headingValue" @edit="toogleHeading" />
+          <PopoverHeading 
+            v-model:heading="openHeading" 
+            v-model:listing="openListing"
+            v-model:textcolor="openTextColor"
+            v-model:highlight="openHighlight"
+            v-model:link="openLink"
+            v-model:image="openImage"
+            :value="headingValue" 
+            @edit="toogleHeading" 
+          />
         </div>
         <!-- List -->
         <div>
-          <PopoverList v-model="openListing" :value="listingValue" @edit="toogleListing" />
+          <PopoverList 
+            v-model:heading="openHeading" 
+            v-model:listing="openListing"
+            v-model:textcolor="openTextColor"
+            v-model:highlight="openHighlight"
+            v-model:link="openLink"
+            v-model:image="openImage"
+            :value="listingValue" 
+            @edit="toogleListing" 
+          />
         </div>
         <!-- Code block -->
         <button 
@@ -356,14 +381,25 @@ const setImage = () => {
         <!-- Text Color -->
         <div> 
           <PopoverTextColor 
-            v-model="openTextColor"
+            v-model:heading="openHeading" 
+            v-model:listing="openListing"
+            v-model:textcolor="openTextColor"
+            v-model:highlight="openHighlight"
+            v-model:link="openLink"
+            v-model:image="openImage"
             :value="editor?.getAttributes('textStyle').color" 
             @edit="editor?.commands.setColor($event)" 
           />
         </div>
-        <!-- Text Color -->
+        <!-- Highlight -->
         <div>
           <PopoverHighlight 
+            v-model:heading="openHeading" 
+            v-model:listing="openListing"
+            v-model:textcolor="openTextColor"
+            v-model:highlight="openHighlight"
+            v-model:link="openLink"
+            v-model:image="openImage"
             :value="editor?.getAttributes('textStyle').background" 
             @edit="editor?.commands.toggleHighlight({ color: $event })" 
           />
@@ -371,6 +407,12 @@ const setImage = () => {
         <!-- Link -->
         <div>
           <PopoverLink 
+            v-model:heading="openHeading" 
+            v-model:listing="openListing"
+            v-model:textcolor="openTextColor"
+            v-model:highlight="openHighlight"
+            v-model:link="openLink"
+            v-model:image="openImage"
             :value="editor?.getAttributes('link').href" 
             :linked="editor?.isActive('link') && editor?.getAttributes('link').href"
             @edit="toogleLink" 
@@ -440,7 +482,16 @@ const setImage = () => {
 
         <!-- Group 6 -->
         <div>
-          <PopoverImage v-model="img" @edit="setImage" />
+          <PopoverImage 
+            v-model:heading="openHeading" 
+            v-model:listing="openListing"
+            v-model:textcolor="openTextColor"
+            v-model:highlight="openHighlight"
+            v-model:link="openLink"
+            v-model:image="openImage"
+            v-model:img="img" 
+            @edit="setImage" 
+          />
         </div>
       </div>
 
@@ -474,6 +525,23 @@ const setImage = () => {
         :open="openTextColor"
         :value="editor?.getAttributes('textStyle').color" 
         @edit="editor?.commands.setColor($event)" 
+      />
+      <MobileHighlight
+        :open="openHighlight"
+        :value="editor?.getAttributes('textStyle').background" 
+        @edit="editor?.commands.toggleHighlight({ color: $event })"
+      />
+      <MobileLink 
+        :open="openLink"
+        :value="editor?.getAttributes('link').href" 
+        :linked="editor?.isActive('link') && editor?.getAttributes('link').href"
+        @edit="toogleLink"
+      />
+      <MobileImage 
+        :open="openImage"
+        v-model="img"
+        @edit="setImage"
+        @close="openImage = false"
       />
     </div>
   </div>

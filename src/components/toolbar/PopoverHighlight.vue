@@ -4,7 +4,7 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import HighlightIcon from '../icons/HighlightIcon.vue'
 import NoneIcon from '../icons/NoneIcon.vue'
 
-const emit = defineEmits(['edit'])
+const emit = defineEmits(['mobile', 'edit'])
 const props = defineProps({
   value: {
     type: String,
@@ -38,17 +38,36 @@ const props = defineProps({
 const handleClick = (value: unknown) => {
   emit('edit', value)
 }
+
+const heading = defineModel('heading', { type: Boolean, default: false })
+const listing = defineModel('listing', { type: Boolean, default: false })
+const textcolor = defineModel('textcolor', { type: Boolean, default: false })
+const highlight = defineModel('highlight', { type: Boolean, default: false })
+const link = defineModel('link', { type: Boolean, default: false })
+const image = defineModel('image', { type: Boolean, default: false })
+
+const mobileHandle = () => {
+  highlight.value = !highlight.value
+  if (highlight.value) {
+    heading.value = false
+    listing.value = false
+    textcolor.value = false
+    link.value = false
+    image.value = false
+  }
+}
 </script>
 <template>
   <Popover v-slot="{ open }" class="relative">
     <PopoverButton 
-      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 transition-all duration-300 delay-75 ease-in-out text-neutral-700 dark:text-neutral-50"
+      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 transition-all duration-300 delay-75 ease-in-out text-neutral-700 dark:text-neutral-50 pi-toolbar-highlight"
       :class="{
         'bg-neutral-200 dark:bg-neutral-100/20': open || props.value,
         'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !open && !props.value,
       }"
-      title="Color"
-      aria-label="Color"
+      title="Highlight"
+      aria-label="Highlight"
+      @click="mobileHandle"
     >
       <HighlightIcon class="w-5 h-5" />
     </PopoverButton>
@@ -62,7 +81,7 @@ const handleClick = (value: unknown) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute bottom-9 lg:bottom-auto left-1/2 -translate-x-1/2 transform z-10 lg:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-filter backdrop-blur rounded-2xl shadow-lg transition border border-neutral-100 dark:border-neutral-100/20"
+        class="absolute bottom-9 lg:bottom-auto left-1/2 -translate-x-1/2 transform z-10 lg:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-filter backdrop-blur rounded-2xl shadow-lg transition border border-neutral-100 dark:border-neutral-100/20 hidden lg:block"
       >
         <div class="flex flex-wrap items-center gap-2 min-w-sm">
           <div v-for="color in props.colors" :key="color"

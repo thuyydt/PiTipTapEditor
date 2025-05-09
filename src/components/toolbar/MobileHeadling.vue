@@ -23,7 +23,7 @@ const handleClick = (value: unknown) => {
 <template>
   <div 
     v-show="props.open"
-    class="absolute left-0 z-20 bottom-10 w-fit max-w-full p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition overflow-x-auto"
+    class="absolute left-0 z-10 bottom-10 w-full border-t border-neutral-100 dark:border-neutral-100/20 p-2 bg-white/80 dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition overflow-x-auto"
   >
     <div class="flex items-center min-w-full gap-4">
       <button 

@@ -3,25 +3,44 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import LinkTargetIcon from '../icons/LinkTargetIcon.vue'
 import ImageIcon from '../icons/ImageIcon.vue'
 
-const emit = defineEmits(['edit'])
+const emit = defineEmits(['mobile', 'edit'])
 
-const img = defineModel({
+const img = defineModel('img', {
   type: String,
   default: '',
 })
+
+const heading = defineModel('heading', { type: Boolean, default: false })
+const listing = defineModel('listing', { type: Boolean, default: false })
+const textcolor = defineModel('textcolor', { type: Boolean, default: false })
+const highlight = defineModel('highlight', { type: Boolean, default: false })
+const link = defineModel('link', { type: Boolean, default: false })
+const image = defineModel('image', { type: Boolean, default: false })
 
 const handleClick = (close: () => void) => {
   emit('edit', img.value)
 
   close()
 }
+
+const mobileHandle = () => {
+  image.value = !image.value
+  if (image.value) {
+    heading.value = false
+    listing.value = false
+    textcolor.value = false
+    highlight.value = false
+    link.value = false
+  }
+}
 </script>
 <template>
   <Popover v-slot="{ close }" class="relative">
     <PopoverButton 
-      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 text-neutral-700 dark:text-neutral-50 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 transition-all duration-300 delay-75 ease-in-out"
+      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 text-neutral-700 dark:text-neutral-50 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 transition-all duration-300 delay-75 ease-in-out pi-toolbar-image"
       title="Add image"
       aria-label="Add image"
+      @click="mobileHandle"
     >
       <ImageIcon class="w-5 h-5" />
       <span class="text-xs">Add</span>
@@ -36,12 +55,12 @@ const handleClick = (close: () => void) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute right-0 transform z-10 bottom-9 lg:bottom-auto lg:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg border border-neutral-100 dark:border-neutral-100/20"
+        class="absolute right-0 transform z-10 bottom-9 lg:bottom-auto lg:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg border border-neutral-100 dark:border-neutral-100/20 hidden lg:block"
       >
         <div class="flex flex-col gap-2 p-2">
           <div class="flex flex-col">
             <span class="text-neutral-700 dark:text-neutral-50">
-              Image URL
+              URL
             </span>
             <div class="w-64 lg:w-80 flex gap-2">
               <div class="grow">

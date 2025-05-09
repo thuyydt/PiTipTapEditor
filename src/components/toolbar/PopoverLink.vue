@@ -5,7 +5,7 @@ import LinkTargetIcon from '../icons/LinkTargetIcon.vue'
 import TrashIcon from '../icons/TrashIcon.vue'
 import EnterIcon from '../icons/EnterIcon.vue'
 
-const emit = defineEmits(['edit'])
+const emit = defineEmits(['mobile', 'edit'])
 
 const props = defineProps({
   value: {
@@ -24,17 +24,36 @@ const handleClick = (value: unknown, close: () => void) => {
 
   close()
 }
+
+const heading = defineModel('heading', { type: Boolean, default: false })
+const listing = defineModel('listing', { type: Boolean, default: false })
+const textcolor = defineModel('textcolor', { type: Boolean, default: false })
+const highlight = defineModel('highlight', { type: Boolean, default: false })
+const link = defineModel('link', { type: Boolean, default: false })
+const image = defineModel('image', { type: Boolean, default: false })
+
+const mobileHandle = () => {
+  link.value = !link.value
+  if (link.value) {
+    heading.value = false
+    listing.value = false
+    textcolor.value = false
+    highlight.value = false
+    image.value = false
+  }
+}
 </script>
 <template>
   <Popover v-slot="{ open, close }" class="relative">
     <PopoverButton 
-      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 transition-all duration-300 delay-75 ease-in-out text-neutral-700 dark:text-neutral-50"
+      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 transition-all duration-300 delay-75 ease-in-out text-neutral-700 dark:text-neutral-50 pi-toolbar-link"
       :class="{
         'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !open && !props.linked,
         'bg-neutral-200 dark:bg-neutral-100/20': open || props.linked,
       }"
       :title="props.linked ? 'Unlink' : 'Link'"
       :aria-label="props.linked ? 'Unlink' : 'Link'"
+      @click="mobileHandle"
     >
       <LinkIcon class="w-5 h-5" />
     </PopoverButton>
@@ -48,7 +67,7 @@ const handleClick = (value: unknown, close: () => void) => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute left-1/2 -translate-x-1/2 transform z-10 bottom-9 lg:bottom-auto lg:mt-2 w-fit p-2 border border-neutral-100 dark:border-neutral-100/20 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg"
+        class="absolute left-1/2 -translate-x-1/2 transform z-10 bottom-9 lg:bottom-auto lg:mt-2 w-fit p-2 border border-neutral-100 dark:border-neutral-100/20 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg hidden lg:block"
       >
         <div class="flex items-center divide-x divide-neutral-200 dark:divide-neutral-200/20 px-2">
           <div class="w-40 lg:w-64 relative flex items-center">
@@ -57,7 +76,7 @@ const handleClick = (value: unknown, close: () => void) => {
               class="w-full bg-transparent text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0"
               placeholder="https://example.com"
               :value="props.value"
-              @keyup.enter="handleClick($event.target.value, close)"
+              @keyup.enter="handleClick(($event.target as HTMLInputElement)?.value || '', close)"
             />
             <div class="absolute right-1 flex items-center">
               <EnterIcon 
