@@ -33,6 +33,7 @@ const listing = defineModel('listing', { type: Boolean, default: false })
 const textcolor = defineModel('textcolor', { type: Boolean, default: false })
 const highlight = defineModel('highlight', { type: Boolean, default: false })
 const link = defineModel('link', { type: Boolean, default: false })
+const youtube = defineModel('youtube', { type: Boolean, default: false })
 const image = defineModel('image', { type: Boolean, default: false })
 
 const mobileHandle = () => {
@@ -42,6 +43,7 @@ const mobileHandle = () => {
     listing.value = false
     textcolor.value = false
     highlight.value = false
+    youtube.value = false
     image.value = false
   }
 }

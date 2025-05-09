@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import LinkTargetIcon from '../icons/LinkTargetIcon.vue'
-import ImageIcon from '../icons/ImageIcon.vue'
+import YoutubeIcon from '../icons/YoutubeIcon.vue'
 
 const emit = defineEmits(['edit'])
 
-const img = defineModel('img', { type: String, default: '' })
+const video = defineModel('video', { type: String, default: '' })
 
 const heading = defineModel('heading', { type: Boolean, default: false })
 const listing = defineModel('listing', { type: Boolean, default: false })
@@ -29,32 +29,31 @@ const props = defineProps({
 })
 
 const handleClick = (close: () => void) => {
-  emit('edit', img.value)
+  emit('edit', video.value)
   close()
 }
 
 const mobileHandle = () => {
-  image.value = !image.value
+  youtube.value = !youtube.value
   if (image.value) {
     heading.value = false
     listing.value = false
     textcolor.value = false
     highlight.value = false
     link.value = false
-    youtube.value = false
+    image.value = false
   }
 }
 </script>
 <template>
   <Popover v-slot="{ close }" class="relative">
     <PopoverButton 
-      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 text-neutral-700 dark:text-neutral-50 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 transition-all duration-300 delay-75 ease-in-out pi-toolbar-image"
-      :title="trans[props.lang].image"
-      :aria-label="trans[props.lang].image"
+      class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 fill-neutral-700 dark:fill-neutral-50 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 transition-all duration-300 delay-75 ease-in-out pi-toolbar-image"
+      :title="trans[props.lang].youtube"
+      :aria-label="trans[props.lang].youtube"
       @click="mobileHandle"
     >
-      <ImageIcon class="w-5 h-5" />
-      <span class="text-xs">{{ trans[props.lang].add }}</span>
+      <YoutubeIcon class="w-7 h-7" />
     </PopoverButton>
 
     <transition
@@ -78,15 +77,15 @@ const mobileHandle = () => {
                 <input
                   type="text"
                   class="w-full bg-neutral-200 dark:bg-white/20 text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
-                  placeholder="https://example.com/img.png"
-                  v-model="img"
+                  placeholder="https://www.youtube.com/watch?v=XXXXXX"
+                  v-model="video"
                   @keyup.enter="handleClick(close)"
                 />
               </div>
               <div class="flex-none w-fit">
                 <div class="flex p-1 items-center group rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-200/30 transition-all duration-200 ease-in-out delay-75 leading-none h-fit cursor-pointer">
                   <a 
-                    :href="img" 
+                    :href="video" 
                     target="_blank"
                     :title="trans[props.lang].preview"
                   >

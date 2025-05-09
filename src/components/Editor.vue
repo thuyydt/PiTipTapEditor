@@ -16,6 +16,7 @@ import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import Highlight from '@tiptap/extension-highlight'
 import ImageResize from './extension/image-resize'
+import Youtube from '@tiptap/extension-youtube'
 
 // icon components
 import UndoIcon from './icons/UndoIcon.vue'
@@ -47,6 +48,8 @@ import PopoverHighlight from './toolbar/PopoverHighlight.vue'
 import MobileHighlight from './toolbar/MobileHighlight.vue'
 import PopoverLink from './toolbar/PopoverLink.vue'
 import MobileLink from './toolbar/MobileLink.vue'
+import PopoverYoutube from './toolbar/PopoverYoutube.vue'
+import MobileYoutube from './toolbar/MobileYoutube.vue'
 import PopoverImage from './toolbar/PopoverImage.vue'
 import MobileImage from './toolbar/MobileImage.vue'
 
@@ -67,6 +70,7 @@ const trans = {
 }
 
 const mobileToolbar = ref<HTMLElement | null>(null)
+const video = ref('') // youtube video id
 const img = ref('') // image src
 
 const listingValue = ref('') // bullet, number, task
@@ -76,6 +80,7 @@ const openListing = ref(false) // mobile listing
 const openTextColor = ref(false) // mobile text color
 const openHighlight = ref(false) // mobile highlight
 const openLink = ref(false) // mobile link
+const openYoutube = ref(false) // mobile youtube
 const openImage = ref(false) // mobile image
 
 const props = defineProps({
@@ -103,6 +108,7 @@ const props = defineProps({
       enableSuperscript: true,
       enableSubscript: true,
       enableTextAlign: true,
+      enableYoutube: true,
       enableImage: true,
     }),
   }
@@ -131,6 +137,7 @@ const showtoolbar = computed(() => {
          props.options.enableSuperscript || 
          props.options.enableSubscript ||
          props.options.enableTextAlign ||
+         props.options.enableYoutube ||
          props.options.enableImage
 })
 
@@ -163,6 +170,9 @@ const editor = useEditor({
     TaskList,
     Highlight.configure({
       multicolor: true,
+    }),
+    Youtube.configure({
+      nocookie: true,
     }),
   ],
   editorProps: {
@@ -250,6 +260,14 @@ const setImage = () => {
   })
 }
 
+const setVideo = () => {
+  editor.value?.commands.setYoutubeVideo({
+    src: video.value,
+    width: 640,
+    height: 480,
+  })
+}
+
 const toogleHighlight = (value: string) => {
   if (!value) {
     editor.value?.commands.unsetHighlight()
@@ -269,6 +287,7 @@ document.addEventListener('click', (event) => {
     openTextColor.value = false
     openHighlight.value = false
     openLink.value = false
+    openYoutube.value = false
     openImage.value = false
   }
 })
@@ -322,6 +341,7 @@ document.addEventListener('click', (event) => {
             v-model:textcolor="openTextColor"
             v-model:highlight="openHighlight"
             v-model:link="openLink"
+            v-model:youtube="openYoutube"
             v-model:image="openImage"
             :lang="lang"
             :value="headingValue" 
@@ -336,6 +356,7 @@ document.addEventListener('click', (event) => {
             v-model:textcolor="openTextColor"
             v-model:highlight="openHighlight"
             v-model:link="openLink"
+            v-model:youtube="openYoutube"
             v-model:image="openImage"
             :lang="lang"
             :value="listingValue" 
@@ -467,6 +488,7 @@ document.addEventListener('click', (event) => {
             v-model:textcolor="openTextColor"
             v-model:highlight="openHighlight"
             v-model:link="openLink"
+            v-model:youtube="openYoutube"
             v-model:image="openImage"
             :lang="lang"
             :value="editor?.getAttributes('textStyle').color" 
@@ -481,6 +503,7 @@ document.addEventListener('click', (event) => {
             v-model:textcolor="openTextColor"
             v-model:highlight="openHighlight"
             v-model:link="openLink"
+            v-model:youtube="openYoutube"
             v-model:image="openImage"
             :lang="lang"
             :value="editor?.getAttributes('textStyle').background" 
@@ -495,6 +518,7 @@ document.addEventListener('click', (event) => {
             v-model:textcolor="openTextColor"
             v-model:highlight="openHighlight"
             v-model:link="openLink"
+            v-model:youtube="openYoutube"
             v-model:image="openImage"
             :lang="lang"
             :value="editor?.getAttributes('link').href" 
@@ -575,6 +599,20 @@ document.addEventListener('click', (event) => {
         </template>
 
         <!-- Group 6 -->
+        <div v-if="props.options.enableYoutube">
+          <PopoverYoutube
+            v-model:heading="openHeading" 
+            v-model:listing="openListing"
+            v-model:textcolor="openTextColor"
+            v-model:highlight="openHighlight"
+            v-model:link="openLink"
+            v-model:image="openImage"
+            v-model:youtube="openYoutube"
+            v-model:video="video" 
+            :lang="lang"
+            @edit="setVideo" 
+          />
+        </div>
         <div v-if="props.options.enableImage">
           <PopoverImage 
             v-model:heading="openHeading" 
@@ -582,6 +620,7 @@ document.addEventListener('click', (event) => {
             v-model:textcolor="openTextColor"
             v-model:highlight="openHighlight"
             v-model:link="openLink"
+            v-model:youtube="openYoutube"
             v-model:image="openImage"
             v-model:img="img" 
             :lang="lang"
@@ -638,6 +677,13 @@ document.addEventListener('click', (event) => {
         :value="editor?.getAttributes('link').href" 
         :linked="editor?.isActive('link') && editor?.getAttributes('link').href"
         @edit="toogleLink"
+      />
+      <MobileYoutube v-if="props.options.enableYoutube"
+        :lang="lang"
+        :open="openYoutube"
+        v-model:video="video"
+        @edit="setVideo"
+        @close="openYoutube = false"
       />
       <MobileImage v-if="props.options.enableImage"
         :lang="lang"

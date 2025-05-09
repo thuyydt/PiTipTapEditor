@@ -30,6 +30,7 @@ const lang = ref<'en' | 'ja' | 'vi' | undefined>('en')
         enableSuperscript: true,
         enableSubscript: true,
         enableTextAlign: true,
+        enableYoutube: true,
         enableImage: true,
       }"
     />
