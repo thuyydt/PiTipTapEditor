@@ -37,7 +37,7 @@ const handleClick = (value: unknown) => {
 <template>
   <div
     v-show="props.open"
-    class="absolute left-0 z-10 bottom-10 w-full p-2 bg-white dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition overflow-x-auto"
+    class="absolute left-0 z-10 bottom-10 w-full p-2 bg-white dark:bg-neutral-900/80 backdrop-blur backdrop-filter transition overflow-x-auto"
   >
     <div class="flex items-center gap-2 min-w-max">
       <template v-for="color in props.colors" :key="color">

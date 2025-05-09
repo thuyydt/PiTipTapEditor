@@ -23,7 +23,7 @@ const close = () => {
 </script>
 <template>
   <div v-show="props.open"
-    class="absolute left-0 transform z-10 bottom-10 w-full p-2 bg-white/80 dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition border-t border-neutral-100 dark:border-neutral-100/20"
+    class="absolute left-0 transform z-10 bottom-10 w-full p-2 bg-white dark:bg-neutral-900/80 backdrop-blur backdrop-filter transition border-t border-neutral-100 dark:border-neutral-100/20"
   >
     <div class="flex flex-col w-full gap-2">
       <div class="flex items-center gap-2 w-full">

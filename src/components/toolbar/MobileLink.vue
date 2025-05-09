@@ -27,7 +27,7 @@ const handleClick = (value: unknown) => {
 </script>
 <template>
   <div v-show="props.open"
-    class="absolute left-0 z-10 bottom-10 w-full px-2 py-1 border-t border-neutral-100 dark:border-neutral-100/20 bg-white/80 dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition"
+    class="absolute left-0 z-10 bottom-10 w-full px-2 py-1 border-t border-neutral-100 dark:border-neutral-100/20 bg-white dark:bg-neutral-900/80 backdrop-blur backdrop-filter transition"
   >
     <div class="flex flex-col divide-y divide-neutral-200 dark:divide-neutral-200/20">
       <div class="w-full relative flex items-center pb-1">

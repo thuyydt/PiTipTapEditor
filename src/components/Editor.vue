@@ -15,8 +15,7 @@ import Subscript from '@tiptap/extension-subscript'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import Highlight from '@tiptap/extension-highlight'
-import Image from '@tiptap/extension-image'
-import ImageResize from 'tiptap-extension-resize-image'
+import ImageResize from './extension/image-resize'
 
 // icon components
 import UndoIcon from './icons/UndoIcon.vue'
@@ -98,10 +97,11 @@ const editor = useEditor({
       defaultAlignment: 'left',
       alignments: ['left', 'center', 'right', 'justify'],
     }),
-    Link,
+    Link.configure({
+      protocols: ['http', 'https', 'mailto'],
+    }),
     Superscript,
     Subscript,
-    Image,
     ImageResize,
     TaskItem,
     TaskList,
@@ -217,7 +217,7 @@ document.addEventListener('click', (event) => {
   <div :class="darkModeClass" class="pi-tiptap-editor relative">
     <!-- Toolbar -->
     <div 
-      class="w-full absolute bottom-0 lg:top-0 lg:sticky border-t lg:border-t-0 dark:border-neutral-500 bg-white dark:bg-neutral-600 z-10 h-auto flex items-center p-1 gap-1 justify-between min-w-full pi-tiptap-editor-toolbar"
+      class="w-full absolute bottom-0 lg:top-0 lg:sticky border-t lg:border-t-0 dark:border-neutral-500 bg-white/80 dark:bg-neutral-600 z-10 h-auto flex items-center p-1 gap-1 justify-between min-w-full pi-tiptap-editor-toolbar backdrop-filter backdrop-blur transition duration-200 ease-in-out delay-75"
     >
       <div class="flex items-center w-fit gap-1">
         <!-- Group 1 -->
