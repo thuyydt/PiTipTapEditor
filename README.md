@@ -14,6 +14,7 @@ Simple Tiptap Editor with Vue 3 and Tailwind CSS.
 - Supports custom fonts
 - Supports custom colors
 - Supports custom styles
+- Supports multiple languages (English, Vietnamese, Japanese)
 
 # Toolbar
 
