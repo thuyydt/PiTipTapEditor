@@ -103,7 +103,9 @@ const editor = useEditor({
     Image,
     TaskItem,
     TaskList,
-    Highlight,
+    Highlight.configure({
+      multicolor: true,
+    }),
   ],
   editorProps: {
     attributes: {
@@ -197,6 +199,15 @@ const toogleLink = (value: string) => {
 
 const setImage = () => {
   editor.value?.commands.setImage({ src: img.value, alt: 'image' })
+}
+
+const toogleHighlight = (value: string) => {
+  if (!value) {
+    editor.value?.commands.unsetHighlight()
+    return
+  }
+
+  editor.value?.commands.toggleHighlight({ color: value })
 }
 
 // click outside mobileToolbar > * to close popover
@@ -401,7 +412,7 @@ document.addEventListener('click', (event) => {
             v-model:link="openLink"
             v-model:image="openImage"
             :value="editor?.getAttributes('textStyle').background" 
-            @edit="editor?.commands.toggleHighlight({ color: $event })" 
+            @edit="toogleHighlight" 
           />
         </div>
         <!-- Link -->
@@ -529,7 +540,7 @@ document.addEventListener('click', (event) => {
       <MobileHighlight
         :open="openHighlight"
         :value="editor?.getAttributes('textStyle').background" 
-        @edit="editor?.commands.toggleHighlight({ color: $event })"
+        @edit="toogleHighlight"
       />
       <MobileLink 
         :open="openLink"

@@ -3,22 +3,11 @@ import NoneIcon from '../icons/NoneIcon.vue'
 
 const emit = defineEmits(['edit'])
 const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false,
-  },
-  value: {
-    type: String,
-    default: '',
-  },
+  open: { type: Boolean, default: false, },
+  value: { type: String, default: '' },
   colors: {
     type: Array as () => string[],
     default: () => [
-      // basic colors (
-      //  NONE
-      //  black, white, red, green, blue, yellow, magenta, cyan, 
-      //  orange, purple, pink, brown
-      // )
       '',
       '#000000',
       '#FFFFFF',
@@ -31,7 +20,6 @@ const props = defineProps({
       '#FFA500',
       '#800080',
       '#FFC0CB',
-      '#A52A2A',
     ],
   },
 })

@@ -23,7 +23,6 @@ const props = defineProps({
       '#FFA500',
       '#800080',
       '#FFC0CB',
-      '#A52A2A',
     ],
   },
 })
@@ -76,23 +75,22 @@ const mobileHandle = () => {
       <PopoverPanel
         class="absolute bottom-9 lg:bottom-auto left-1/2 -translate-x-1/2 transform z-10 lg:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/60 backdrop-filter backdrop-blur rounded-2xl shadow-lg transition border border-neutral-100 dark:border-neutral-100/20 hidden lg:block"
       >
-        <div class="flex flex-wrap items-center gap-2 min-w-sm">
+        <div class="flex flex-wrap items-start gap-2 min-w-sm">
           <div v-for="color in props.colors" :key="color"
-            class="flex items-center justify-center w-10 h-10 border-3 rounded-full cursor-pointer outline-none focus:outline-none ring-0 transition-all duration-300 ease-in-out delay-75 hover:opacity-80 shadow"
+            class="flex items-start justify-center rounded-full cursor-pointer outline-none focus:outline-none ring-0 transition-all duration-300 ease-in-out delay-75 hover:opacity-80 shadow"
             :class="{
-              'p-1': props.value === color,
+              'border-2': color,
+              'w-10 h-10': color && props.value === color,
+              'w-8 h-8': !color || props.value !== color,
             }"
             :style="{
-              borderColor: props.value && props.value === color ? color : 'rgba(255, 255, 255, 0.25)',
+              borderColor: 'rgba(255, 255, 255, 0.25)',
             }"
             :title="color ? color : 'None'"
             :aria-label="color ? color : 'None'"
           >
             <NoneIcon v-if="!color" 
               class="w-full h-full rounded-full outline-none focus:outline-none ring-0 transition-all duration-300 ease-in-out delay-75 shadow text-neutral-700 dark:text-white/50"
-              :style="{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.25)' 
-              }"
               @click.prevent="handleClick('')"
             />
             <button v-else

@@ -6,14 +6,8 @@ import H4Icon from '../icons/H4Icon.vue'
 
 const emit = defineEmits(['edit'])
 const props = defineProps({
-  open: {
-    type: Boolean,
-    default: false,
-  },
-  value: {
-    type: String,
-    default: '',
-  },
+  open: { type: Boolean, default: false },
+  value: { type: String, default: '', },
 })
 
 const handleClick = (value: unknown) => {

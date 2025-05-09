@@ -14,11 +14,6 @@ const props = defineProps({
   colors: {
     type: Array as () => string[],
     default: () => [
-      // basic colors (
-      //  NONE
-      //  black, white, red, green, blue, yellow, magenta, cyan, 
-      //  orange, purple, pink, brown
-      // )
       '',
       '#000000',
       '#FFFFFF',
@@ -31,7 +26,6 @@ const props = defineProps({
       '#FFA500',
       '#800080',
       '#FFC0CB',
-      '#A52A2A',
     ],
   },
 })
