@@ -1,8 +1,19 @@
 <script setup lang="ts">
 import LinkTargetIcon from '../icons/LinkTargetIcon.vue'
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
+
 const emit = defineEmits(['edit', 'close'])
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   open: {
     type: Boolean,
     default: false,
@@ -30,7 +41,7 @@ const close = () => {
         <div class="grow">
           <div class="flex items-center gap-1 relative">
             <span class="absolute top-1/2 left-px transform -translate-y-1/2 text-neutral-400 dark:text-neutral-50 bg-neutral-50/20 rounded-l-sm px-1 h-full flex items-center">
-              URL
+              {{ trans[props.lang].url }}
             </span>
             <input
               type="text"
@@ -43,7 +54,7 @@ const close = () => {
               <a 
                 :href="img" 
                 target="_blank"
-                title="Preview image"
+                :title="trans[props.lang].preview"
               >
                 <LinkTargetIcon class="w-5 h-5 text-neutral-400 dark:text-neutral-50/40"/>
               </a>
@@ -58,7 +69,7 @@ const close = () => {
             class="group p-1 rounded-lg hover:opacity-80 bg-blue-500 transition-all duration-200 ease-in-out delay-75 text-neutral-50 cursor-pointer px-2 min-w-24" 
             @click.prevent="handleClick"
           >
-            OK
+            {{ trans[props.lang].ok }}
           </button>
         </div>
         <div>
@@ -67,7 +78,7 @@ const close = () => {
             class="group p-1 rounded-lg hover:opacity-80 bg-neutral-200 dark:bg-neutral-50/20 transition-all duration-200 ease-in-out delay-75 text-neutral-700 dark:text-neutral-50 cursor-pointer px-2 min-w-24" 
             @click.prevent="close"
           >
-            Cancel
+            {{ trans[props.lang].cancel }}
           </button>
         </div>
       </div>

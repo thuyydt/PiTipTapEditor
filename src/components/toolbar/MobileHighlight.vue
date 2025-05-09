@@ -1,8 +1,19 @@
 <script setup lang="ts">
 import NoneIcon from '../icons/NoneIcon.vue'
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
+
 const emit = defineEmits(['edit'])
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   open: {
     type: Boolean,
     default: false,
@@ -51,8 +62,8 @@ const handleClick = (value: unknown) => {
           :style="{
             borderColor: 'rgba(255, 255, 255, 0.25)',
           }"
-          :title="color ? color : 'None'"
-          :aria-label="color ? color : 'None'"
+          :title="color ? color : trans[props.lang].none"
+          :aria-label="color ? color : trans[props.lang].none"
         >
           <NoneIcon v-if="!color" 
             class="w-full h-full rounded-full outline-none focus:outline-none ring-0 transition-all duration-300 ease-in-out delay-75 shadow text-neutral-700 dark:text-white/50"

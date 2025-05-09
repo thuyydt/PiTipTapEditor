@@ -6,7 +6,17 @@ import NoneIcon from '../icons/NoneIcon.vue'
 
 const emit = defineEmits(['edit'])
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   value: { type: String, default: '' },
   colors: {
     type: Array as () => string[],
@@ -57,8 +67,8 @@ const mobileHandle = () => {
         'bg-neutral-200 dark:bg-neutral-100/20': open || props.value,
         'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !open && !props.value,
       }"
-      title="Color"
-      aria-label="Color"
+      :title="trans[props.lang].color"
+      :aria-label="trans[props.lang].color"
       @click="mobileHandle"
     >
       <ColorIcon class="w-5 h-5 fill-neutral-700 dark:fill-neutral-50" />
@@ -83,8 +93,8 @@ const mobileHandle = () => {
               'w-10 h-10': color && props.value === color,
               'w-8 h-8': !color || props.value !== color,
             }"
-            :title="color ? color : 'None'"
-            :aria-label="color ? color : 'None'"
+            :title="color ? color : trans[props.lang].none"
+            :aria-label="color ? color : trans[props.lang].none"
           >
             <NoneIcon v-if="!color" 
               class="w-full h-full rounded-full outline-none focus:outline-none ring-0 transition-all duration-300 ease-in-out delay-75 shadow text-neutral-700 dark:text-white/50"

@@ -4,8 +4,19 @@ import H2Icon from '../icons/H2Icon.vue'
 import H3Icon from '../icons/H3Icon.vue'
 import H4Icon from '../icons/H4Icon.vue'
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
+
 const emit = defineEmits(['edit'])
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   open: { type: Boolean, default: false },
   value: { type: String, default: '', },
 })
@@ -27,8 +38,8 @@ const handleClick = (value: unknown) => {
           'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h1',
         }"
         @click.prevent="handleClick('h1')"
-        title="Heading 1"
-        aria-label="Heading 1"
+        :title="trans[props.lang].heading1"
+        :aria-label="trans[props.lang].heading1"
       >
         <H1Icon class="h-6 w-6" />
       </button>
@@ -39,8 +50,8 @@ const handleClick = (value: unknown) => {
           'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h2',
         }"
         @click.prevent="handleClick('h2')"
-        title="Heading 2"
-        aria-label="Heading 2"
+        :title="trans[props.lang].heading2"
+        :aria-label="trans[props.lang].heading2"
       >
         <H2Icon class="h-6 w-6" />
       </button>
@@ -51,8 +62,8 @@ const handleClick = (value: unknown) => {
           'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h3',
         }"
         @click.prevent="handleClick('h3')"
-        title="Heading 3"
-        aria-label="Heading 3"
+        :title="trans[props.lang].heading3"
+        :aria-label="trans[props.lang].heading3"
       >
         <H3Icon class="h-6 w-6" />
       </button>
@@ -63,8 +74,8 @@ const handleClick = (value: unknown) => {
           'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h4',
         }"
         @click.prevent="handleClick('h4')"
-        title="Heading 4"
-        aria-label="Heading 4"
+        :title="trans[props.lang].heading4"
+        :aria-label="trans[props.lang].heading4"
       >
         <H4Icon class="h-6 w-6" />
       </button>

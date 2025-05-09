@@ -3,9 +3,20 @@ import LinkTargetIcon from '../icons/LinkTargetIcon.vue'
 import TrashIcon from '../icons/TrashIcon.vue'
 import EnterIcon from '../icons/EnterIcon.vue'
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
+
 const emit = defineEmits(['edit'])
 
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   open: {
     type: Boolean,
     default: false,
@@ -54,15 +65,14 @@ const handleClick = (value: unknown) => {
                 class="group p-1 rounded-lg bg-blue-500 hover:opacity-80 text-neutral-50 transition-all duration-200 ease-in-out delay-75 cursor-pointer min-w-20" 
                 @click.prevent="handleClick('link')"
               >
-                OK
+                {{ trans[props.lang].ok }}
               </button>
             </div>
             <div class="flex p-1 items-center group rounded-lg hover:bg-neutral-200 dark:hover:bg-neutral-200/30 transition-all duration-200 ease-in-out delay-75 leading-none h-fit cursor-pointer">
               <a 
                 :href="props.value" 
                 target="_blank"
-                title="Preview link"
-                :aria-label="`Preview link ${props.value}`"
+                :title="trans[props.lang].preview"
               >
                 <LinkTargetIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50"/>
               </a>
@@ -73,8 +83,7 @@ const handleClick = (value: unknown) => {
               type="button" 
               class="group p-1 rounded-lg hover:bg-neutral-200 hover:text-red-400 dark:hover:bg-neutral-200/30 transition-all duration-200 ease-in-out delay-75 cursor-pointer text-neutral-700 dark:text-neutral-50" 
               @click.prevent="handleClick('unlink')"
-              title="Unlink"
-              :aria-label="`Unlink ${props.value}`"
+              :title="trans[props.lang].unlink"
             >
               <TrashIcon class="w-5 h-5"/>
             </button>

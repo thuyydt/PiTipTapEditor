@@ -3,8 +3,19 @@ import BulletListIcon from '../icons/BulletListIcon.vue'
 import OrderedListIcon from '../icons/OrderedListIcon.vue'
 import TaskListIcon from '../icons/TaskListIcon.vue'
 
+// import ja from '../lang/ja.json'
+// import en from '../lang/en.json'
+// import vi from '../lang/vi.json'
+// // register i18n
+// const trans: Record<string, Record<string, string>> = {
+//   ja,
+//   en,
+//   vi,
+// }
+
 const emit = defineEmits(['edit'])
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   open: {
     type: Boolean,
     default: false,

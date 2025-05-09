@@ -8,7 +8,17 @@ import DropdownIcon from '../icons/DropdownIcon.vue'
 
 const emit = defineEmits(['edit'])
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   value: { type: String, default: '' },
 })
 
@@ -43,8 +53,8 @@ const mobileHandle = () => {
         'bg-neutral-200 dark:bg-neutral-100/20': open || ['bullet', 'number'].includes(props.value),
         'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !open && !['bullet', 'number'].includes(props.value),
       }"
-      title="List"
-      aria-label="List"
+      :title="trans[props.lang].list"
+      :aria-label="trans[props.lang].list"
       @click="mobileHandle"
     >
       <OrderedListIcon v-if="props.value === 'number'" class="h-5 w-5" />
@@ -75,7 +85,7 @@ const mobileHandle = () => {
             @click.prevent="handleClick('bullet', close)"
           >
             <BulletListIcon class="h-5 w-5" />
-            <span>Bullet List</span>
+            <span>{{ trans[props.lang].bulletList }}</span>
           </button>
 
           <button 
@@ -87,7 +97,7 @@ const mobileHandle = () => {
             @click.prevent="handleClick('number', close)"
           >
             <OrderedListIcon class="h-5 w-5" />
-            <span>Numbered List</span>
+            <span>{{ trans[props.lang].orderedList }}</span>
           </button>
 
           <button 
@@ -99,7 +109,7 @@ const mobileHandle = () => {
             @click.prevent="handleClick('task', close)"
           >
             <TaskListIcon class="h-5 w-5" />
-            <span>Task List</span>
+            <span>{{ trans[props.lang].taskList }}</span>
           </button>
         </div>
       </PopoverPanel>

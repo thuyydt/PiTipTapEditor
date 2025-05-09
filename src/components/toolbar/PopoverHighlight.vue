@@ -4,9 +4,20 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import HighlightIcon from '../icons/HighlightIcon.vue'
 import NoneIcon from '../icons/NoneIcon.vue'
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
+
 const emit = defineEmits(['edit'])
 
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   value: { type: String, default: '' },
   colors: {
     type: Array as () => string[],
@@ -57,8 +68,8 @@ const mobileHandle = () => {
         'bg-neutral-200 dark:bg-neutral-100/20': open || props.value,
         'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !open && !props.value,
       }"
-      title="Highlight"
-      aria-label="Highlight"
+      :title="trans[props.lang].highlight"
+      :aria-label="trans[props.lang].highlight"
       @click="mobileHandle"
     >
       <HighlightIcon class="w-5 h-5" />

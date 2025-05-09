@@ -8,9 +8,20 @@ import H3Icon from '../icons/H3Icon.vue'
 import H4Icon from '../icons/H4Icon.vue'
 import DropdownIcon from '../icons/DropdownIcon.vue'
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
+
 const emit = defineEmits(['edit'])
 
 const props = defineProps({
+  lang: { type: String, default: 'en' },
   value: { type: String, default: '' } ,
 })
 
@@ -45,8 +56,8 @@ const mobileHandle = () => {
         'bg-neutral-200 dark:bg-neutral-100/20': open || ['h1', 'h2', 'h3', 'h4'].includes(props.value),
         'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !open && !['h1', 'h2', 'h3', 'h4'].includes(props.value),
       }"
-      title="Heading"
-      aria-label="Heading"
+      :title="trans[props.lang].heading"
+      :aria-label="trans[props.lang].heading"
       @click="mobileHandle"
     >
       <HIcon v-if="!['h1','h2','h3','h4'].includes(props.value)" class="h-5 w-5" />
@@ -78,11 +89,11 @@ const mobileHandle = () => {
               'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h1',
             }"
             @click.prevent="handleClick('h1', close)"
-            title="Heading 1"
-            aria-label="Heading 1"
+            :title="trans[props.lang].heading1"
+            :aria-label="trans[props.lang].heading1"
           >
             <H1Icon class="h-4 w-4" />
-            <span>Heading 1</span>
+            <span>{{ trans[props.lang].heading1 }}</span>
           </button>
           <button 
             class="flex items-center gap-4 min-w-max cursor-pointer rounded-md p-1 outline-none focus:outline-none ring-0" 
@@ -91,11 +102,11 @@ const mobileHandle = () => {
               'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h2',
             }"
             @click.prevent="handleClick('h2', close)"
-            title="Heading 2"
-            aria-label="Heading 2"
+            :title="trans[props.lang].heading2"
+            :aria-label="trans[props.lang].heading2"
           >
             <H2Icon class="h-4 w-4" />
-            <span>Heading 2</span>
+            <span>{{ trans[props.lang].heading2 }}</span>
           </button>
           <button 
             class="flex items-center gap-4 min-w-max cursor-pointer rounded-md p-1 outline-none focus:outline-none ring-0" 
@@ -104,11 +115,11 @@ const mobileHandle = () => {
               'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h3',
             }"
             @click.prevent="handleClick('h3', close)"
-            title="Heading 3"
-            aria-label="Heading 3"
+            :title="trans[props.lang].heading3"
+            :aria-label="trans[props.lang].heading3"
           >
             <H3Icon class="h-4 w-4" />
-            <span>Heading 3</span>
+            <span>{{ trans[props.lang].heading3 }}</span>
           </button>
           <button 
             class="flex items-center gap-4 min-w-max cursor-pointer rounded-md p-1 outline-none focus:outline-none ring-0" 
@@ -117,11 +128,11 @@ const mobileHandle = () => {
               'bg-neutral-200 text-neutral-700 dark:bg-neutral-100/20 dark:text-white': props.value === 'h4',
             }"
             @click.prevent="handleClick('h4', close)"
-            title="Heading 4"
-            aria-label="Heading 4"
+            :title="trans[props.lang].heading4"
+            :aria-label="trans[props.lang].heading4"
           >
             <H4Icon class="h-4 w-4" />
-            <span>Heading 4</span>
+            <span>{{ trans[props.lang].heading4 }}</span>
           </button>
         </div>
       </PopoverPanel>

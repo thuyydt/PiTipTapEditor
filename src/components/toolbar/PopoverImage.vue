@@ -14,6 +14,19 @@ const highlight = defineModel('highlight', { type: Boolean, default: false })
 const link = defineModel('link', { type: Boolean, default: false })
 const image = defineModel('image', { type: Boolean, default: false })
 
+import ja from '../lang/ja.json'
+import en from '../lang/en.json'
+import vi from '../lang/vi.json'
+// register i18n
+const trans: Record<string, Record<string, string>> = {
+  ja,
+  en,
+  vi,
+}
+const props = defineProps({
+  lang: { type: String, default: 'en' },
+})
+
 const handleClick = (close: () => void) => {
   emit('edit', img.value)
   close()
@@ -34,12 +47,12 @@ const mobileHandle = () => {
   <Popover v-slot="{ close }" class="relative">
     <PopoverButton 
       class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 outline-none focus:outline-none ring-0 text-neutral-700 dark:text-neutral-50 hover:bg-neutral-200 dark:hover:bg-neutral-100/20 transition-all duration-300 delay-75 ease-in-out pi-toolbar-image"
-      title="Add image"
-      aria-label="Add image"
+      :title="trans[props.lang].image"
+      :aria-label="trans[props.lang].image"
       @click="mobileHandle"
     >
       <ImageIcon class="w-5 h-5" />
-      <span class="text-xs">Add</span>
+      <span class="text-xs">{{ trans[props.lang].add }}</span>
     </PopoverButton>
 
     <transition
@@ -56,7 +69,7 @@ const mobileHandle = () => {
         <div class="flex flex-col gap-2 p-2">
           <div class="flex flex-col">
             <span class="text-neutral-700 dark:text-neutral-50">
-              URL
+              {{ trans[props.lang].url }}
             </span>
             <div class="w-64 lg:w-80 flex gap-2">
               <div class="grow">
@@ -73,7 +86,7 @@ const mobileHandle = () => {
                   <a 
                     :href="img" 
                     target="_blank"
-                    title="Preview image"
+                    :title="trans[props.lang].preview"
                   >
                     <LinkTargetIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50"/>
                   </a>
@@ -88,7 +101,7 @@ const mobileHandle = () => {
                 class="group p-1 rounded-lg hover:opacity-80 bg-blue-500 transition-all duration-200 ease-in-out delay-75 text-neutral-50 cursor-pointer px-4 min-w-24" 
                 @click.prevent="handleClick(close)"
               >
-                OK
+                {{ trans[props.lang].ok }}
               </button>
             </div>
             <div>
@@ -97,7 +110,7 @@ const mobileHandle = () => {
                 class="group p-1 rounded-lg hover:opacity-80 bg-neutral-200 dark:bg-neutral-50/20 transition-all duration-200 ease-in-out delay-75 text-neutral-700 dark:text-neutral-50 cursor-pointer px-4 min-w-24" 
                 @click.prevent="close"
               >
-                Cancel
+                {{ trans[props.lang].cancel }}
               </button>
             </div>
           </div>

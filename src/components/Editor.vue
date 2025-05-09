@@ -54,6 +54,18 @@ import MobileImage from './toolbar/MobileImage.vue'
 const content = defineModel('content', { default: "<p></p>" })
 const mode = defineModel('mode', { type: String, default: 'dark' }) // light or dark
 
+import type { PropType } from 'vue'
+const lang = defineModel<'ja' | 'en' | 'vi'>('lang', { type: String as PropType<'ja' | 'en' | 'vi'>, default: 'en' }) // language
+import ja from './lang/ja.json'
+import en from './lang/en.json'
+import vi from './lang/vi.json'
+// register i18n
+const trans = {
+  ja,
+  en,
+  vi,
+}
+
 const mobileToolbar = ref<HTMLElement | null>(null)
 const img = ref('') // image src
 
@@ -275,8 +287,8 @@ document.addEventListener('click', (event) => {
               'hover:bg-neutral-200 dark:hover:bg-neutral-100/20 text-neutral-700 dark:text-neutral-50': editor?.can().undo(),
             }"
             @click.prevent="editor?.commands.undo" 
-            title="Undo"
-            aria-label="Undo"
+            :title="trans[lang].undo"
+            :aria-label="trans[lang].undo"
           >
             <UndoIcon class="h-5 w-5" />
           </button>
@@ -289,8 +301,8 @@ document.addEventListener('click', (event) => {
               'hover:bg-neutral-200 dark:hover:bg-neutral-100/20 text-neutral-700 dark:text-neutral-50': editor?.can().redo(),
             }"
             @click.prevent="editor?.commands.redo" 
-            title="Redo"
-            aria-label="Redo"
+            :title="trans[lang].redo"
+            :aria-label="trans[lang].redo"
           >
             <RedoIcon class="h-5 w-5" />
           </button>
@@ -307,6 +319,7 @@ document.addEventListener('click', (event) => {
             v-model:highlight="openHighlight"
             v-model:link="openLink"
             v-model:image="openImage"
+            :lang="lang"
             :value="headingValue" 
             @edit="toogleHeading" 
           />
@@ -320,6 +333,7 @@ document.addEventListener('click', (event) => {
             v-model:highlight="openHighlight"
             v-model:link="openLink"
             v-model:image="openImage"
+            :lang="lang"
             :value="listingValue" 
             @edit="toogleListing" 
           />
@@ -334,8 +348,8 @@ document.addEventListener('click', (event) => {
               'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('codeBlock'),
             }"
             @click.prevent="editor?.commands.setNode('codeBlock')"
-            title="Code block"
-            aria-label="Code block"
+            :title="trans[lang].codeBlock"
+            :aria-label="trans[lang].codeBlock"
           >
             <CodeBlockIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-50" />
           </button>
@@ -349,8 +363,8 @@ document.addEventListener('click', (event) => {
               'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('blockQuote'),
             }"
             @click.prevent="editor?.commands.toggleBlockquote"
-            title="Blockquote"
-            aria-label="Blockquote"
+            :title="trans[lang].blockQuote"
+            :aria-label="trans[lang].blockQuote"
           >
             <BlockQuoteIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-50" />
           </button>
@@ -371,8 +385,8 @@ document.addEventListener('click', (event) => {
               'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('bold'),
             }"
             @click.prevent="editor?.commands.toggleBold" 
-            title="Bold"
-            aria-label="Bold"
+            :title="trans[lang].bold"
+            :aria-label="trans[lang].bold"
           >
             <BoldIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
           </button>
@@ -387,8 +401,8 @@ document.addEventListener('click', (event) => {
               'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('italic'),
             }"
             @click.prevent="editor?.commands.toggleItalic" 
-            title="Italic"
-            aria-label="Italic"
+            :title="trans[lang].italic"
+            :aria-label="trans[lang].italic"
           >
             <ItalicIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
           </button>
@@ -403,8 +417,8 @@ document.addEventListener('click', (event) => {
               'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('strike'),
             }"
             @click.prevent="editor?.commands.toggleStrike" 
-            title="Strike"
-            aria-label="Strike"
+            :title="trans[lang].strike"
+            :aria-label="trans[lang].strike"
           >
             <StrikeIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
           </button>
@@ -419,8 +433,8 @@ document.addEventListener('click', (event) => {
               'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('code'),
               'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('code'),
             }"
-            title="Code"
-            aria-label="Code"
+            :title="trans[lang].code"
+            :aria-label="trans[lang].code"
           >
             <CodeIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
           </button>
@@ -435,8 +449,8 @@ document.addEventListener('click', (event) => {
               'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('underline'),
               'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('underline'),
             }"
-            title="Underline"
-            aria-label="Underline"
+            :title="trans[lang].underline"
+            :aria-label="trans[lang].underline"
           >
             <UnderlineIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
           </button>
@@ -450,6 +464,7 @@ document.addEventListener('click', (event) => {
             v-model:highlight="openHighlight"
             v-model:link="openLink"
             v-model:image="openImage"
+            :lang="lang"
             :value="editor?.getAttributes('textStyle').color" 
             @edit="editor?.commands.setColor($event)" 
           />
@@ -463,6 +478,7 @@ document.addEventListener('click', (event) => {
             v-model:highlight="openHighlight"
             v-model:link="openLink"
             v-model:image="openImage"
+            :lang="lang"
             :value="editor?.getAttributes('textStyle').background" 
             @edit="toogleHighlight" 
           />
@@ -476,6 +492,7 @@ document.addEventListener('click', (event) => {
             v-model:highlight="openHighlight"
             v-model:link="openLink"
             v-model:image="openImage"
+            :lang="lang"
             :value="editor?.getAttributes('link').href" 
             :linked="editor?.isActive('link') && editor?.getAttributes('link').href"
             @edit="toogleLink" 
@@ -491,8 +508,8 @@ document.addEventListener('click', (event) => {
           <button 
             class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
             @click.prevent="editor?.commands.toggleSuperscript" 
-            title="Superscript"
-            aria-label="Superscript"
+            :title="trans[lang].superscript"
+            :aria-label="trans[lang].superscript"
           >
             <SuperscriptIcon class="w-5 h-5" />
           </button>
@@ -502,8 +519,8 @@ document.addEventListener('click', (event) => {
           <button 
             class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
             @click.prevent="editor?.commands.toggleSubscript" 
-            title="Subscript"
-            aria-label="Subscript"
+            :title="trans[lang].subscript"
+            :aria-label="trans[lang].subscript"
           >
             <SubscriptIcon class="w-5 h-5" />
           </button>
@@ -518,8 +535,8 @@ document.addEventListener('click', (event) => {
           <button 
             class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
             @click.prevent="editor?.commands.toggleTextAlign('left')" 
-            title="Align left"
-            aria-label="Align left"
+            :title="trans[lang].alignLeft"
+            :aria-label="trans[lang].alignLeft"
           >
             <AlignLeftIcon class="w-5 h-5" />
           </button>
@@ -527,8 +544,8 @@ document.addEventListener('click', (event) => {
           <button 
             class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
             @click.prevent="editor?.commands.toggleTextAlign('center')" 
-            title="Align center"
-            aria-label="Align center"
+            :title="trans[lang].alignCenter"
+            :aria-label="trans[lang].alignCenter"
           >
             <AlignCenterIcon class="w-5 h-5 " />
           </button>
@@ -536,8 +553,8 @@ document.addEventListener('click', (event) => {
           <button 
             class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
             @click.prevent="editor?.commands.toggleTextAlign('right')" 
-            title="Align right"
-            aria-label="Align right"
+            :title="trans[lang].alignRight"
+            :aria-label="trans[lang].alignRight"
           >
             <AlignRightIcon class="w-5 h-5" />
           </button>
@@ -545,8 +562,8 @@ document.addEventListener('click', (event) => {
           <button 
             class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
             @click.prevent="editor?.commands.toggleTextAlign('justify')" 
-            title="Align justify"
-            aria-label="Align justify"
+            :title="trans[lang].alignJustify"
+            :aria-label="trans[lang].alignJustify"
           >
             <AlignJustifyIcon class="w-5 h-5" />
           </button>
@@ -563,6 +580,7 @@ document.addEventListener('click', (event) => {
             v-model:link="openLink"
             v-model:image="openImage"
             v-model:img="img" 
+            :lang="lang"
             @edit="setImage" 
           />
         </div>
@@ -573,8 +591,8 @@ document.addEventListener('click', (event) => {
         <button 
           class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
           @click.prevent="toggleDarkMode" 
-          title="Toggle dark/light mode"
-          aria-label="Toggle dark/light mode"
+          :title="trans[lang].toggleDarkMode"
+          :aria-label="trans[lang].toggleDarkMode"
         >
           <LightIcon v-if="mode === 'light'" class="w-5 h-5" />
           <DarkIcon v-else class="w-5 h-5" />
@@ -587,32 +605,38 @@ document.addEventListener('click', (event) => {
 
     <div ref="mobileToolbar" class="lg:hidden">
       <MobileHeadling v-if="props.options.enableHeading"
+        :lang="lang"
         :open="openHeading"
         :value="headingValue" 
         @edit="toogleHeading"
       />
       <MobileList v-if="props.options.enableList"
+        :lang="lang"
         :open="openListing"
         :value="listingValue" 
         @edit="toogleListing"
       />
       <MobileTextColor v-if="props.options.enableTextColor"
+        :lang="lang"
         :open="openTextColor"
         :value="editor?.getAttributes('textStyle').color" 
         @edit="editor?.commands.setColor($event)" 
       />
       <MobileHighlight v-if="props.options.enableHighlight"
+        :lang="lang"
         :open="openHighlight"
         :value="editor?.getAttributes('textStyle').background" 
         @edit="toogleHighlight"
       />
       <MobileLink v-if="props.options.enableLink"
+        :lang="lang"
         :open="openLink"
         :value="editor?.getAttributes('link').href" 
         :linked="editor?.isActive('link') && editor?.getAttributes('link').href"
         @edit="toogleLink"
       />
       <MobileImage v-if="props.options.enableImage"
+        :lang="lang"
         :open="openImage"
         v-model:img="img"
         @edit="setImage"
