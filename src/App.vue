@@ -7,7 +7,7 @@ const content = ref('<p>Hello World</p>')
 const lang = ref<'en' | 'ja' | 'vi' | undefined>('en')
 </script>
 <template>
-  <div class="w-full h-80">
+  <div class="w-screen h-[80vh]">
     <Editor 
       v-model:mode="mode" 
       v-model:content="content" 
