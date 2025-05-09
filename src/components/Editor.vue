@@ -51,10 +51,10 @@ import PopoverImage from './toolbar/PopoverImage.vue'
 import MobileImage from './toolbar/MobileImage.vue'
 
 // define model
-const model = defineModel({ default: "<p></p>" })
+const content = defineModel('content', { default: "<p></p>" })
+const mode = defineModel('mode', { type: String, default: 'dark' }) // light or dark
 
 const mobileToolbar = ref<HTMLElement | null>(null)
-const mode = ref('dark') // light or dark
 const img = ref('') // image src
 
 const listingValue = ref('') // bullet, number, task
@@ -71,6 +71,29 @@ const props = defineProps({
     type: String,
     default: 'w-full h-full flex flex-col border border-neutral-200 dark:border-neutral-600 divide-y divide-neutral-200 dark:divide-neutral-500',
   },
+  options: {
+    type: Object,
+    default: () => ({
+      enableDarkMode: true,
+      enableUndoRedo: true,
+      enableHeading: true,
+      enableList: true,
+      enableCodeBlock: true,
+      enableBlockquote: true,
+      enableBold: true,
+      enableItalic: true,
+      enableStrike: true,
+      enableCode: true,
+      enableUnderline: true,
+      enableTextColor: true,
+      enableHighlight: true,
+      enableLink: true,
+      enableSuperscript: true,
+      enableSubscript: true,
+      enableTextAlign: true,
+      enableImage: true,
+    }),
+  }
 })
 
 // append dark mode class to props.class
@@ -78,8 +101,29 @@ const darkModeClass = computed(() => {
   return props.class + (mode.value === 'dark' ? ' dark' : '')
 })
 
+const showtoolbar = computed(() => {
+  return props.options.enableDarkMode || 
+         props.options.enableUndoRedo || 
+         props.options.enableHeading || 
+         props.options.enableList || 
+         props.options.enableCodeBlock || 
+         props.options.enableBlockquote || 
+         props.options.enableBold || 
+         props.options.enableItalic || 
+         props.options.enableStrike || 
+         props.options.enableCode || 
+         props.options.enableUnderline || 
+         props.options.enableTextColor || 
+         props.options.enableHighlight || 
+         props.options.enableLink || 
+         props.options.enableSuperscript || 
+         props.options.enableSubscript ||
+         props.options.enableTextAlign ||
+         props.options.enableImage
+})
+
 const editor = useEditor({
-  content: model.value,
+  content: content.value,
   extensions: [
     StarterKit.configure({
       heading: {
@@ -216,44 +260,46 @@ document.addEventListener('click', (event) => {
 <template>
   <div :class="darkModeClass" class="pi-tiptap-editor relative">
     <!-- Toolbar -->
-    <div 
+    <div v-if="showtoolbar"
       class="w-full absolute bottom-0 lg:top-0 lg:sticky border-t lg:border-t-0 dark:border-neutral-500 bg-white/80 dark:bg-neutral-600 z-10 h-auto flex items-center p-1 gap-1 justify-between min-w-full pi-tiptap-editor-toolbar backdrop-filter backdrop-blur transition duration-200 ease-in-out delay-75"
     >
       <div class="flex items-center w-fit gap-1">
         <!-- Group 1 -->
-        <!-- Undo -->
-        <button 
-          type="button"
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer"
-          :class="{
-            'text-neutral-300 dark:text-neutral-50/20': !editor?.can().undo(),
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20 text-neutral-700 dark:text-neutral-50': editor?.can().undo(),
-          }"
-          @click.prevent="editor?.commands.undo" 
-          title="Undo"
-          aria-label="Undo"
-        >
-          <UndoIcon class="h-5 w-5" />
-        </button>
-        <!-- Redo -->
-        <button 
-          type="button"
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer"
-          :class="{
-            'text-neutral-300 dark:text-neutral-50/20': !editor?.can().redo(),
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20 text-neutral-700 dark:text-neutral-50': editor?.can().redo(),
-          }"
-          @click.prevent="editor?.commands.redo" 
-          title="Redo"
-          aria-label="Redo"
-        >
-          <RedoIcon class="h-5 w-5" />
-        </button>
-        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
+        <template v-if="props.options.enableUndoRedo">
+          <!-- Undo -->
+          <button 
+            type="button"
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer"
+            :class="{
+              'text-neutral-300 dark:text-neutral-50/20': !editor?.can().undo(),
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20 text-neutral-700 dark:text-neutral-50': editor?.can().undo(),
+            }"
+            @click.prevent="editor?.commands.undo" 
+            title="Undo"
+            aria-label="Undo"
+          >
+            <UndoIcon class="h-5 w-5" />
+          </button>
+          <!-- Redo -->
+          <button 
+            type="button"
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer"
+            :class="{
+              'text-neutral-300 dark:text-neutral-50/20': !editor?.can().redo(),
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20 text-neutral-700 dark:text-neutral-50': editor?.can().redo(),
+            }"
+            @click.prevent="editor?.commands.redo" 
+            title="Redo"
+            aria-label="Redo"
+          >
+            <RedoIcon class="h-5 w-5" />
+          </button>
+          <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20 pi-tiptap-divide-1"></span>
+        </template>
 
         <!-- Group 2 -->
         <!-- Heading -->
-        <div>
+        <div v-if="props.options.enableHeading">
           <PopoverHeading 
             v-model:heading="openHeading" 
             v-model:listing="openListing"
@@ -266,7 +312,7 @@ document.addEventListener('click', (event) => {
           />
         </div>
         <!-- List -->
-        <div>
+        <div v-if="props.options.enableList">
           <PopoverList 
             v-model:heading="openHeading" 
             v-model:listing="openListing"
@@ -279,107 +325,124 @@ document.addEventListener('click', (event) => {
           />
         </div>
         <!-- Code block -->
-        <button 
-          type="button"
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
-          :class="{
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('codeBlock'),
-            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('codeBlock'),
-          }"
-          @click.prevent="editor?.commands.setNode('codeBlock')"
-          title="Code block"
-          aria-label="Code block"
-        >
-          <CodeBlockIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-50" />
-        </button>
-        <button 
-          type="button"
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
-          :class="{
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('blockQuote'),
-            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('blockQuote'),
-          }"
-          @click.prevent="editor?.commands.toggleBlockquote"
-          title="Blockquote"
-          aria-label="Blockquote"
-        >
-          <BlockQuoteIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-50" />
-        </button>
-        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
+        <div v-if="props.options.enableCodeBlock">
+          <button 
+            type="button"
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
+            :class="{
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('codeBlock'),
+              'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('codeBlock'),
+            }"
+            @click.prevent="editor?.commands.setNode('codeBlock')"
+            title="Code block"
+            aria-label="Code block"
+          >
+            <CodeBlockIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-50" />
+          </button>
+        </div>
+        <div v-if="props.options.enableBlockquote">
+          <button 
+            type="button"
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
+            :class="{
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('blockQuote'),
+              'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('blockQuote'),
+            }"
+            @click.prevent="editor?.commands.toggleBlockquote"
+            title="Blockquote"
+            aria-label="Blockquote"
+          >
+            <BlockQuoteIcon class="h-5 w-5 text-neutral-700 dark:text-neutral-50" />
+          </button>
+        </div>
+        <span 
+          v-if="props.options.enableHeading || props.options.enableList || props.options.enableCodeBlock || props.options.enableBlockquote"
+          class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20 pi-tiptap-divide-2"
+        ></span>
 
         <!-- Group 3 -->
-        <!-- Bold -->
-        <button 
-          type="button"
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
-          :class="{
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('bold'),
-            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('bold'),
-          }"
-          @click.prevent="editor?.commands.toggleBold" 
-          title="Bold"
-          aria-label="Bold"
-        >
-          <BoldIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
-        </button>
-        <!-- Italic -->
-        <button 
-          type="button"
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center"
-          :class="{
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('italic'),
-            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('italic'),
-          }"
-          @click.prevent="editor?.commands.toggleItalic" 
-          title="Italic"
-          aria-label="Italic"
-        >
-          <ItalicIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
-        </button>
-        <!-- Strike -->
-        <button 
-          type="button"
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
-          :class="{
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('strike'),
-            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('strike'),
-          }"
-          @click.prevent="editor?.commands.toggleStrike" 
-          title="Strike"
-          aria-label="Strike"
-        >
-          <StrikeIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
-        </button>
-        <!-- Code -->
-        <button 
-          type="button"
-          @click.prevent="editor?.commands.toggleCode" 
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
-          :class="{
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('code'),
-            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('code'),
-          }"
-          title="Code"
-          aria-label="Code"
-        >
-          <CodeIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
-        </button>
-        <!-- Underline -->
-        <button 
-          type="button"
-          @click.prevent="editor?.commands.toggleUnderline"
-          class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
-          :class="{
-            'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('underline'),
-            'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('underline'),
-          }"
-          title="Underline"
-          aria-label="Underline"
-        >
-          <UnderlineIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
-        </button>
+        <div v-if="props.options.enableBold">
+          <!-- Bold -->
+          <button 
+            type="button"
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
+            :class="{
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('bold'),
+              'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('bold'),
+            }"
+            @click.prevent="editor?.commands.toggleBold" 
+            title="Bold"
+            aria-label="Bold"
+          >
+            <BoldIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
+          </button>
+        </div>
+        <div v-if="props.options.enableItalic">
+          <!-- Italic -->
+          <button 
+            type="button"
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center"
+            :class="{
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('italic'),
+              'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('italic'),
+            }"
+            @click.prevent="editor?.commands.toggleItalic" 
+            title="Italic"
+            aria-label="Italic"
+          >
+            <ItalicIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
+          </button>
+        </div>
+        <div v-if="props.options.enableStrike">
+          <!-- Strike -->
+          <button 
+            type="button"
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
+            :class="{
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('strike'),
+              'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('strike'),
+            }"
+            @click.prevent="editor?.commands.toggleStrike" 
+            title="Strike"
+            aria-label="Strike"
+          >
+            <StrikeIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
+          </button>
+        </div>
+        <div v-if="props.options.enableCode">
+          <!-- Code -->
+          <button 
+            type="button"
+            @click.prevent="editor?.commands.toggleCode" 
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
+            :class="{
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('code'),
+              'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('code'),
+            }"
+            title="Code"
+            aria-label="Code"
+          >
+            <CodeIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
+          </button>
+        </div>
+        <div v-if="props.options.enableUnderline">
+          <!-- Underline -->
+          <button 
+            type="button"
+            @click.prevent="editor?.commands.toggleUnderline"
+            class="rounded-md p-1 hover:opacity-80 cursor-pointer flex items-center gap-1"
+            :class="{
+              'hover:bg-neutral-200 dark:hover:bg-neutral-100/20': !editor?.isActive('underline'),
+              'bg-neutral-200 dark:bg-neutral-100/20': editor?.isActive('underline'),
+            }"
+            title="Underline"
+            aria-label="Underline"
+          >
+            <UnderlineIcon class="w-5 h-5 text-neutral-700 dark:text-neutral-50" />
+          </button>
+        </div>
         <!-- Text Color -->
-        <div> 
+        <div v-if="props.options.enableTextColor"> 
           <PopoverTextColor 
             v-model:heading="openHeading" 
             v-model:listing="openListing"
@@ -392,7 +455,7 @@ document.addEventListener('click', (event) => {
           />
         </div>
         <!-- Highlight -->
-        <div>
+        <div v-if="props.options.enableHighlight">
           <PopoverHighlight 
             v-model:heading="openHeading" 
             v-model:listing="openListing"
@@ -405,7 +468,7 @@ document.addEventListener('click', (event) => {
           />
         </div>
         <!-- Link -->
-        <div>
+        <div v-if="props.options.enableLink">
           <PopoverLink 
             v-model:heading="openHeading" 
             v-model:listing="openListing"
@@ -418,70 +481,80 @@ document.addEventListener('click', (event) => {
             @edit="toogleLink" 
           />
         </div>
-        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
+        <span 
+          v-if="props.options.enableBold || props.options.enableItalic || props.options.enableStrike || props.options.enableCode || props.options.enableUnderline || props.options.enableTextColor || props.options.enableHighlight || props.options.enableLink"
+          class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20 pi-tiptap-divide-3"></span>
 
         <!-- Group 4 -->
-        <!-- Superscript -->
-        <button 
-          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
-          @click.prevent="editor?.commands.toggleSuperscript" 
-          title="Superscript"
-          aria-label="Superscript"
-        >
-          <SuperscriptIcon class="w-5 h-5" />
-        </button>
-        <!-- Subscript -->
-        <button 
-          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
-          @click.prevent="editor?.commands.toggleSubscript" 
-          title="Subscript"
-          aria-label="Subscript"
-        >
-          <SubscriptIcon class="w-5 h-5" />
-        </button>
-        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
+        <div v-if="props.options.enableSuperscript">
+          <!-- Superscript -->
+          <button 
+            class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+            @click.prevent="editor?.commands.toggleSuperscript" 
+            title="Superscript"
+            aria-label="Superscript"
+          >
+            <SuperscriptIcon class="w-5 h-5" />
+          </button>
+        </div>
+        <div v-if="props.options.enableSubscript">
+          <!-- Subscript -->
+          <button 
+            class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+            @click.prevent="editor?.commands.toggleSubscript" 
+            title="Subscript"
+            aria-label="Subscript"
+          >
+            <SubscriptIcon class="w-5 h-5" />
+          </button>
+        </div>
+        <span 
+          v-if="props.options.enableSuperscript || props.options.enableSubscript"
+          class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20 pi-tiptap-divide-4"></span>
 
         <!-- Group 5 -->
-        <!-- Align left -->
-        <button 
-          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
-          @click.prevent="editor?.commands.toggleTextAlign('left')" 
-          title="Align left"
-          aria-label="Align left"
-        >
-          <AlignLeftIcon class="w-5 h-5" />
-        </button>
-        <!-- Align center -->
-        <button 
-          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
-          @click.prevent="editor?.commands.toggleTextAlign('center')" 
-          title="Align center"
-          aria-label="Align center"
-        >
-          <AlignCenterIcon class="w-5 h-5 " />
-        </button>
-        <!-- Align right -->
-        <button 
-          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
-          @click.prevent="editor?.commands.toggleTextAlign('right')" 
-          title="Align right"
-          aria-label="Align right"
-        >
-          <AlignRightIcon class="w-5 h-5" />
-        </button>
-        <!-- Align justify -->
-        <button 
-          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
-          @click.prevent="editor?.commands.toggleTextAlign('justify')" 
-          title="Align justify"
-          aria-label="Align justify"
-        >
-          <AlignJustifyIcon class="w-5 h-5" />
-        </button>
-        <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20"></span>
+        <template v-if="props.options.enableTextAlign">
+          <!-- Align left -->
+          <button 
+            class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+            @click.prevent="editor?.commands.toggleTextAlign('left')" 
+            title="Align left"
+            aria-label="Align left"
+          >
+            <AlignLeftIcon class="w-5 h-5" />
+          </button>
+          <!-- Align center -->
+          <button 
+            class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+            @click.prevent="editor?.commands.toggleTextAlign('center')" 
+            title="Align center"
+            aria-label="Align center"
+          >
+            <AlignCenterIcon class="w-5 h-5 " />
+          </button>
+          <!-- Align right -->
+          <button 
+            class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+            @click.prevent="editor?.commands.toggleTextAlign('right')" 
+            title="Align right"
+            aria-label="Align right"
+          >
+            <AlignRightIcon class="w-5 h-5" />
+          </button>
+          <!-- Align justify -->
+          <button 
+            class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+            @click.prevent="editor?.commands.toggleTextAlign('justify')" 
+            title="Align justify"
+            aria-label="Align justify"
+          >
+            <AlignJustifyIcon class="w-5 h-5" />
+          </button>
+          <span class="w-px h-6 bg-neutral-200 dark:bg-neutral-50/20 pi-tiptap-divide-5"></span>
+        </template>
 
         <!-- Group 6 -->
-        <div>
+        <div v-if="props.options.enableImage">
           <PopoverImage 
             v-model:heading="openHeading" 
             v-model:listing="openListing"
@@ -495,49 +568,51 @@ document.addEventListener('click', (event) => {
         </div>
       </div>
 
-      <!-- dark/light mode -->
-      <button 
-        class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
-        @click.prevent="toggleDarkMode" 
-        title="Toggle dark/light mode"
-        aria-label="Toggle dark/light mode"
-      >
-        <LightIcon v-if="mode === 'light'" class="w-5 h-5" />
-        <DarkIcon v-else class="w-5 h-5" />
-      </button>
+      <div v-if="props.options.enableDarkMode">
+        <!-- dark/light mode -->
+        <button 
+          class="rounded-md hover:bg-neutral-200 dark:hover:bg-neutral-100/20 p-1 hover:opacity-80 cursor-pointer flex items-center gap-1 min-w-8 justify-center text-neutral-700 dark:text-neutral-50"
+          @click.prevent="toggleDarkMode" 
+          title="Toggle dark/light mode"
+          aria-label="Toggle dark/light mode"
+        >
+          <LightIcon v-if="mode === 'light'" class="w-5 h-5" />
+          <DarkIcon v-else class="w-5 h-5" />
+        </button>
+      </div>
     </div>
 
     <!-- Editor -->
     <EditorContent :editor="editor" class="h-full w-full overflow-auto mb-9 lg:mb-0 pi-tiptap-editor-content" />
 
     <div ref="mobileToolbar" class="lg:hidden">
-      <MobileHeadling
+      <MobileHeadling v-if="props.options.enableHeading"
         :open="openHeading"
         :value="headingValue" 
         @edit="toogleHeading"
       />
-      <MobileList
+      <MobileList v-if="props.options.enableList"
         :open="openListing"
         :value="listingValue" 
         @edit="toogleListing"
       />
-      <MobileTextColor
+      <MobileTextColor v-if="props.options.enableTextColor"
         :open="openTextColor"
         :value="editor?.getAttributes('textStyle').color" 
         @edit="editor?.commands.setColor($event)" 
       />
-      <MobileHighlight
+      <MobileHighlight v-if="props.options.enableHighlight"
         :open="openHighlight"
         :value="editor?.getAttributes('textStyle').background" 
         @edit="toogleHighlight"
       />
-      <MobileLink 
+      <MobileLink v-if="props.options.enableLink"
         :open="openLink"
         :value="editor?.getAttributes('link').href" 
         :linked="editor?.isActive('link') && editor?.getAttributes('link').href"
         @edit="toogleLink"
       />
-      <MobileImage 
+      <MobileImage v-if="props.options.enableImage"
         :open="openImage"
         v-model:img="img"
         @edit="setImage"
