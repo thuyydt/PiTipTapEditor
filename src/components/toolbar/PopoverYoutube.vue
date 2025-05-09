@@ -34,6 +34,8 @@ const handleClick = (close: () => void) => {
 }
 
 const mobileHandle = () => {
+  video.value = ''
+  
   youtube.value = !youtube.value
   if (image.value) {
     heading.value = false

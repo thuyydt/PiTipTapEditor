@@ -196,6 +196,10 @@ const editor = useEditor({
     // get the current image src
     const image = editor.getAttributes('image')
     img.value = image.src || ''
+
+    // get the current video src
+    const video = editor.getAttributes('youtube')
+    video.value = video.src || ''
   },
   onBlur({ editor }) {
     // get the current heading level
@@ -213,6 +217,10 @@ const editor = useEditor({
     // get the current image src
     const image = editor.getAttributes('image')
     img.value = image.src || ''
+
+    // get the current video src
+    const video = editor.getAttributes('youtube')
+    video.value = video.src || ''
   },
   onCreate() {
     console.group('PiTipTap Editor loaded!')
