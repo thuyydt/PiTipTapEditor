@@ -113,3 +113,8 @@ const mode = ref('dark')
 </script>
 ```
 
+## Demo
+
+![\[Desktop\] (../demo/desktop.png)](https://github.com/thuyydt/mytiptap/blob/main/demo/desktop.png?raw=true)
+
+![\[Mobile\] (../demo/mobile.png)](https://github.com/thuyydt/mytiptap/blob/main/demo/mobile.png?raw=true)
