@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
+
 import HIcon from '../icons/HIcon.vue'
 import H1Icon from '../icons/H1Icon.vue'
 import H2Icon from '../icons/H2Icon.vue'
@@ -7,12 +8,10 @@ import H3Icon from '../icons/H3Icon.vue'
 import H4Icon from '../icons/H4Icon.vue'
 import DropdownIcon from '../icons/DropdownIcon.vue'
 
-const emit = defineEmits(['mobile', 'edit'])
+const emit = defineEmits(['edit'])
+
 const props = defineProps({
-  value: {
-    type: String,
-    default: '',
-  },
+  value: { type: String, default: '' } ,
 })
 
 const heading = defineModel('heading', { type: Boolean, default: false })
@@ -24,13 +23,11 @@ const image = defineModel('image', { type: Boolean, default: false })
 
 const handleClick = (value: unknown, close: () => void) => {
   emit('edit', value)
-
   close()
 }
 
 const mobileHandle = () => {
   heading.value = !heading.value
-  
   if (heading.value) {
     listing.value = false
     textcolor.value = false

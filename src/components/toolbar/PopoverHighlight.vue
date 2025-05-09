@@ -4,20 +4,13 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import HighlightIcon from '../icons/HighlightIcon.vue'
 import NoneIcon from '../icons/NoneIcon.vue'
 
-const emit = defineEmits(['mobile', 'edit'])
+const emit = defineEmits(['edit'])
+
 const props = defineProps({
-  value: {
-    type: String,
-    default: '',
-  },
+  value: { type: String, default: '' },
   colors: {
     type: Array as () => string[],
     default: () => [
-      // basic colors (
-      //  NONE
-      //  black, white, red, green, blue, yellow, magenta, cyan, 
-      //  orange, purple, pink, brown
-      // )
       '',
       '#000000',
       '#FFFFFF',

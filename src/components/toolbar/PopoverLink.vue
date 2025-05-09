@@ -1,27 +1,20 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
+
 import LinkIcon from '../icons/LinkIcon.vue'
 import LinkTargetIcon from '../icons/LinkTargetIcon.vue'
 import TrashIcon from '../icons/TrashIcon.vue'
 import EnterIcon from '../icons/EnterIcon.vue'
 
-const emit = defineEmits(['mobile', 'edit'])
+const emit = defineEmits(['edit'])
 
 const props = defineProps({
-  value: {
-    type: String,
-    default: '',
-  },
-  linked: {
-    type: Boolean,
-    required: true,
-    default: false,
-  },
+  value: { type: String, default: '', },
+  linked: { type: Boolean, required: true, default: false },
 })
 
 const handleClick = (value: unknown, close: () => void) => {
   emit('edit', value)
-
   close()
 }
 

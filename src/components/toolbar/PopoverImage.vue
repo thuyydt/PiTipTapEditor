@@ -3,13 +3,9 @@ import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
 import LinkTargetIcon from '../icons/LinkTargetIcon.vue'
 import ImageIcon from '../icons/ImageIcon.vue'
 
-const emit = defineEmits(['mobile', 'edit'])
+const emit = defineEmits(['edit'])
 
-const img = defineModel('img', {
-  type: String,
-  default: '',
-})
-
+const img = defineModel('img', { type: String, default: '' })
 const heading = defineModel('heading', { type: Boolean, default: false })
 const listing = defineModel('listing', { type: Boolean, default: false })
 const textcolor = defineModel('textcolor', { type: Boolean, default: false })
@@ -19,7 +15,6 @@ const image = defineModel('image', { type: Boolean, default: false })
 
 const handleClick = (close: () => void) => {
   emit('edit', img.value)
-
   close()
 }
 

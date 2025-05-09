@@ -1,16 +1,15 @@
 <script setup lang="ts">
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/vue'
+
 import BulletListIcon from '../icons/BulletListIcon.vue'
 import OrderedListIcon from '../icons/OrderedListIcon.vue'
 import TaskListIcon from '../icons/TaskListIcon.vue'
 import DropdownIcon from '../icons/DropdownIcon.vue'
 
-const emit = defineEmits(['mobile', 'edit'])
+const emit = defineEmits(['edit'])
+
 const props = defineProps({
-  value: {
-    type: String,
-    default: '',
-  },
+  value: { type: String, default: '' },
 })
 
 const heading = defineModel('heading', { type: Boolean, default: false })
@@ -22,7 +21,6 @@ const image = defineModel('image', { type: Boolean, default: false })
 
 const handleClick = (value: unknown, close: () => void) => {
   emit('edit', value)
-
   close()
 }
 
