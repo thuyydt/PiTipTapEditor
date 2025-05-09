@@ -205,7 +205,11 @@ const editor = useEditor({
     img.value = image.src || ''
   },
   onCreate() {
-    console.info('Custom TipTap Editor loaded!')
+    console.group('PiTipTap Editor loaded!')
+    console.info('Version: 1.0.0')
+    console.info('Author: Phinq')
+    console.info('License: MIT')
+    console.groupEnd()
   },
 })
 
