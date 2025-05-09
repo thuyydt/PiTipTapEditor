@@ -6,6 +6,7 @@ import ImageIcon from '../icons/ImageIcon.vue'
 const emit = defineEmits(['edit'])
 
 const img = defineModel('img', { type: String, default: '' })
+
 const heading = defineModel('heading', { type: Boolean, default: false })
 const listing = defineModel('listing', { type: Boolean, default: false })
 const textcolor = defineModel('textcolor', { type: Boolean, default: false })
@@ -80,34 +81,7 @@ const mobileHandle = () => {
               </div>
             </div>
           </div>
-          <div class="flex items-center gap-4">
-            <div class="flex items-center gap-0.5">
-              <span class="text-neutral-700 dark:text-neutral-50">Width</span>
-              <div>
-                <input
-                  type="number"
-                  class="w-20 bg-neutral-200 dark:bg-white/20 text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
-                  placeholder="Width"
-                />
-              </div>
-              <span class="text-neutral-700 dark:text-neutral-50">px</span>
-            </div>
-            <div class="flex items-center gap-0.5">
-              <span class="text-neutral-700 dark:text-neutral-50">Height</span>
-              <div>
-                <input
-                  type="number"
-                  class="w-20 bg-neutral-200 dark:bg-white/20 text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0 px-2 py-0.5 rounded"
-                  placeholder="Height"
-                />
-              </div>
-              <span class="text-neutral-700 dark:text-neutral-50">px</span>
-            </div>
-          </div>
-          <div class="text-xs text-neutral-400 dark:text-neutral-50/50">
-            Leave blank the Width and the Height to use the original size.
-          </div>
-          <div class="flex items-center justify-center gap-2 mt-4">
+          <div class="flex items-center justify-center gap-2">
             <div>
               <button 
                 type="button" 

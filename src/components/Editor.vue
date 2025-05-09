@@ -12,10 +12,11 @@ import { Color } from '@tiptap/extension-color'
 import Link from '@tiptap/extension-link'
 import Superscript from '@tiptap/extension-superscript'
 import Subscript from '@tiptap/extension-subscript'
-import Image from '@tiptap/extension-image'
 import TaskList from '@tiptap/extension-task-list'
 import TaskItem from '@tiptap/extension-task-item'
 import Highlight from '@tiptap/extension-highlight'
+import Image from '@tiptap/extension-image'
+import ImageResize from 'tiptap-extension-resize-image'
 
 // icon components
 import UndoIcon from './icons/UndoIcon.vue'
@@ -101,6 +102,7 @@ const editor = useEditor({
     Superscript,
     Subscript,
     Image,
+    ImageResize,
     TaskItem,
     TaskList,
     Highlight.configure({
@@ -127,18 +129,7 @@ const editor = useEditor({
 
     // get the current image src
     const image = editor.getAttributes('image')
-    if (image.src) {
-      img.value = image.src
-    } else {
-      img.value = ''
-    }
-  },
-  onFocus({ editor }) {
-    // check if focused to image
-    const image = editor.getAttributes('image')
-    if (image.src) {
-      
-    }
+    img.value = image.src || ''
   },
   onBlur({ editor }) {
     // get the current heading level
@@ -155,11 +146,7 @@ const editor = useEditor({
 
     // get the current image src
     const image = editor.getAttributes('image')
-    if (image.src) {
-      img.value = image.src
-    } else {
-      img.value = ''
-    }
+    img.value = image.src || ''
   },
   onCreate() {
     console.info('Custom TipTap Editor loaded!')
@@ -198,7 +185,9 @@ const toogleLink = (value: string) => {
 }
 
 const setImage = () => {
-  editor.value?.commands.setImage({ src: img.value, alt: 'image' })
+  editor.value?.commands.setImage({
+    src: img.value,
+  })
 }
 
 const toogleHighlight = (value: string) => {
@@ -550,7 +539,7 @@ document.addEventListener('click', (event) => {
       />
       <MobileImage 
         :open="openImage"
-        v-model="img"
+        v-model:img="img"
         @edit="setImage"
         @close="openImage = false"
       />

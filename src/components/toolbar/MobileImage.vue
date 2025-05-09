@@ -9,10 +9,7 @@ const props = defineProps({
   },
 })
 
-const img = defineModel({
-  type: String,
-  default: '',
-})
+const img = defineModel('img', { type: String, default: '', })
 
 const handleClick = () => {
   emit('edit', img.value)
@@ -29,9 +26,6 @@ const close = () => {
     class="absolute left-0 transform z-10 bottom-10 w-full p-2 bg-white/80 dark:bg-neutral-900/60 backdrop-blur backdrop-filter transition border-t border-neutral-100 dark:border-neutral-100/20"
   >
     <div class="flex flex-col w-full gap-2">
-      <div class="text-xs text-neutral-400 dark:text-neutral-50/50 text-center">
-        Leave blank the Width and the Height to use the original size.
-      </div>
       <div class="flex items-center gap-2 w-full">
         <div class="grow">
           <div class="flex items-center gap-1 relative">
@@ -57,29 +51,6 @@ const close = () => {
           </div>
         </div>
       </div>
-      <div class="flex items-center gap-2">
-        <div class="flex items-center gap-0.5 w-1/2 relative">
-          <span class="absolute -translate-y-1/2 top-1/2 left-0 px-1 h-full flex items-center text-neutral-400 dark:text-neutral-50 bg-neutral-50/20 rounded-l-sm w-8 justify-center">
-            W
-          </span>
-          <input
-            type="number"
-            class="w-full bg-neutral-200 dark:bg-white/20 text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0 pl-8 pr-6 py-0.5 rounded"
-          />
-          <span class="text-neutral-400 dark:text-neutral-50/20 absolute -translate-y-1/2 top-1/2 right-0 px-1 h-full flex items-center text-xs">px</span>
-        </div>
-        <div class="flex items-center gap-0.5 w-1/2 relative">
-          <span class="absolute -translate-y-1/2 top-1/2 left-0 px-1 h-full flex items-center text-neutral-400 dark:text-neutral-50 bg-neutral-50/20 rounded-l-sm w-8 justify-center">
-            H
-          </span>
-          <input
-            type="number"
-            class="w-full bg-neutral-200 dark:bg-white/20 text-neutral-700 dark:text-neutral-50 outline-none focus:outline-none ring-0 pl-8 pr-6 py-0.5 rounded"
-          />
-          <span class="text-neutral-400 dark:text-neutral-50/20 absolute -translate-y-1/2 top-1/2 right-0 px-1 h-full flex items-center text-xs">px</span>
-        </div>
-      </div>
-      <span class="w-full bg-neutral-100 dark:bg-neutral-50/10 h-px"></span>
       <div class="flex items-center justify-center gap-2">
         <div>
           <button 
