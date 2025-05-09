@@ -69,6 +69,12 @@ npm install vue
 
 ## Usage
 
+add to main.css
+```css
+@custom-variant dark (&:where(.dark, .dark *));
+```
+
+in your-file.vue
 ```html
 <template>
   <div class="[your-class]">
