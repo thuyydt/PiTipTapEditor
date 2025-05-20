@@ -72,7 +72,7 @@ const mobileHandle = () => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute left-1/2 -translate-x-1/2 transform z-10 bottom-9 lg:bottom-auto lg:mt-2 w-fit p-2 border border-neutral-100 dark:border-neutral-100/20 bg-white dark:bg-neutral-900/80 backdrop-blur backdrop-filter transition rounded-2xl shadow-lg hidden lg:block"
+        class="absolute left-1/2 -translate-x-1/2 transform z-10 bottom-9 lg:bottom-auto lg:mt-2 w-fit p-2 border border-neutral-100 dark:border-neutral-100/20 bg-white dark:bg-neutral-900 rounded-2xl shadow-lg hidden lg:block"
       >
         <div class="flex items-center divide-x divide-neutral-200 dark:divide-neutral-200/20 px-2">
           <div class="w-40 lg:w-64 relative flex items-center">

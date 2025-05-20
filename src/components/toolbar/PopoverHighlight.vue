@@ -86,7 +86,7 @@ const mobileHandle = () => {
       leave-to-class="translate-y-1 opacity-0"
     >
       <PopoverPanel
-        class="absolute bottom-9 lg:bottom-auto left-1/2 -translate-x-1/2 transform z-10 lg:mt-2 w-fit p-2 bg-white dark:bg-neutral-900/80 backdrop-filter backdrop-blur rounded-2xl shadow-lg transition border border-neutral-100 dark:border-neutral-100/20 hidden lg:block"
+        class="absolute bottom-9 lg:bottom-auto left-1/2 -translate-x-1/2 transform z-10 lg:mt-2 w-fit p-2 bg-white dark:bg-neutral-900 rounded-2xl shadow-lg border border-neutral-100 dark:border-neutral-100/20 hidden lg:block"
       >
         <div class="flex flex-wrap items-start gap-2 min-w-sm">
           <div v-for="color in props.colors" :key="color"
